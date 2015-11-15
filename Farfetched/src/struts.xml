@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+ 
+<struts>
+ 	<constant name="struts.devMode" value="true" />
+	<package name="all" extends="struts-default">
+ 
+		<action name="index">
+			<result>/index.jsp</result>
+		</action>
+ 
+		<action name="hello">
+			<result>/hello.jsp</result>
+		</action>		
+		<action name="gallery">
+			<result>/jsp/gallery.jsp</result>
+		</action>
+		<action name="discover">
+			<result>/jsp/discover.jsp</result>
+		</action>
+		<action name="blog">
+			<result>/jsp/blog.jsp</result>
+		</action>
+		
+		<action name="userEmailSubscriptionEntry" class="com.akash.util.UserEmailSubscriptionEntry">  
+			<result name="success">/index.jsp</result>  
+		</action>  
+		
+		<action name="cancelEmailSubscription" class="com.akash.util.CancelEmailSubscription">  
+			<result name="success">/index.jsp</result>  
+		</action>
+		
+		<action name="productBuyNowEntry" class="com.akash.merchandise.ProductBuyNowEntry">  
+			<result name="success">/index.jsp</result>  
+		</action> 
+		
+		<action name="cancelOrder" class="com.akash.merchandise.CancelOrder">  
+			<result name="success">/index.jsp</result>  
+		</action>
+		
+		<action name="notifyPaymentConfirmation" class="com.akash.merchandise.NotifyPaymentConfirmation">  
+			<result name="success">/index.jsp</result>  
+		</action> 
+		
+		<action name="contactUsEntry" class="com.akash.contact.ContactUsEntry">  
+			<result name="success">/index.jsp</result>  
+		</action> 
+		
+		<action name="bookUsEntry" class="com.akash.contact.BookUsEntry">  
+			<result name="success">/index.jsp</result>  
+		</action> 
+		
+		<action name="downloadAction" class="com.akash.download.DownloadAction">
+			<result name="success" type="stream">
+			  <param name="contentType">application/octet-stream</param>
+			  <param name="inputName">fileInputStream</param>
+			  <param name="contentDisposition">attachment;filename=${fileName}</param>
+			  <param name="bufferSize">1024</param>
+			</result>
+		</action> 
+		
+		<action name="ajaxAction" class="com.akash.blog.ajaxAction.AjaxAction">  
+			<result name="success">/jsp/blog.jsp</result>  
+		</action> 
+	</package>
+</struts>

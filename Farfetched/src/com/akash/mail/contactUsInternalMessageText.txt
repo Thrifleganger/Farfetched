@@ -1,0 +1,17 @@
+<html>
+<body>
+<p>You recieved a new contact email from <b>${name}</b> from the email ID <b>${email}</b> on ${currentTime}.<p>
+<h3>Contact Details:</h3>
+</br>
+<ul>
+	<li>Name: ${name}</li>
+	<li>Email ID: ${email}</li>
+	<li>Contact: ${number}</li>
+</ul>
+
+</br>
+
+<div style="margin:30px; font-style:italic">${description}</div>
+
+</body>
+</html>

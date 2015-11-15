@@ -1,0 +1,76 @@
+<html>
+<head>
+	<style>
+		table{
+			border-collapse: collapse;
+		}
+		table,td,th{
+			border: 1px solid black;
+		}
+		td, th{
+			padding: 10px;
+		}
+		td{
+			text-align:left;
+		}
+	</style>
+</head>
+
+<body>
+<p>Hey ${fname},<p>
+<p>Thank you so much for placing an order with us! If you haven't already read the description 
+while placing the order, this is how it is going to work.</p>
+
+<p>We have registered your order on our end and are awaiting your payment. Below are the 
+account details, to which you shall transfer the amount of Rs.${totalPrice}. After the transfer is done, 
+click on the "Notify payment complete" link at the bottom. This is optional, and it sends us a mail that 
+you have completed your transaction and we can be on the look out for incoming transactions. It will usually 
+take 1 working day for the money to be credit, upon which you shall receive a confirmation email regarding 
+the same, with a formal acknowledgement.</p>
+
+<h3>Order Summary</h3>
+<hr style="width:80%;"><br>
+<table>
+	<tr>
+		<td colspan="4">Order ID: ${orderId}</td>
+	</tr>
+	<tr>
+		<th>Product</th>
+		<th>Quantity</th>
+		<th>Unit Price</th>
+		<th>Total Price</th>
+	</tr>
+	<tr>
+		<td>Farfetch'd - The Alchemist Digipack/Album </td>
+		<td>${quantity}</td>
+		<td>${unitPrice}</td>
+		<td>${totalPrice}</td>
+	</tr>
+</table>
+</br>
+<h3>Shipping details</h3>
+<hr style="width:80%;"><br>
+${fname} ${lname},<br>
+${street},<br>
+${locality},<br>
+${city}, ${pincode}<br>
+${state}<br>
+Contact: ${contact}<br>
+
+<h3>Transaction Details:</h3>
+<hr style="width:80%;"><br>
+<b>Name:</b> Akash Murthy<br>
+<b>A/C no:</b> 4711454183<br>
+<b>Bank Name:</b> Kotak Mahindra<br>
+<b>IFSC Code:</b> KKBK0000463<br>
+<b>Description:</b> Order ID: ${orderId}<br>
+
+<p><a href="${paymentConfirmation}">Notify payment confirmation</a></p>
+
+<p>If you changed your mind and would want to cancel your order, click <a href="${cancelOrder}">here</a></p>
+
+<p style="font-size:.8em; color: grey">All the information listed here is confidential. Fowarding or sharing any part of this email is not cool</p>
+
+
+</body>
+</html>
