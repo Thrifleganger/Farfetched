@@ -1,0 +1,9 @@
+create table emailsubscription(userid int, emailid varchar(255), substatus varchar(2));
+
+create table productbuynow(orderid int, productid int, productname varchar(255), quantity int, unitprice int, totalprice int, fname varchar(255), lname varchar(255), emailid varchar(255), contact varchar(15),
+street varchar(255), locality varchar(255), city varchar(255), state varchar(255), pincode varchar(6), paymentconfirm varchar(1),
+isshipped varchar(1), orderstatus varchar(1), timeplaced varchar(50), timepaid varchar(50), ordertransaction varchar(255));
+
+create table contactus(name varchar(255),email varchar(255), contact varchar(255), description longtext, time_created varchar(255));
+
+create table bookus(name varchar(255),email varchar(255), contact varchar(255), description longtext, time_created varchar(255));

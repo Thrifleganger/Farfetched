@@ -1,0 +1,26 @@
+<html>
+<body>
+<p>Hey there,<p>
+<p>Thank you so much for subscribing to our mailing list! We have just started off, 
+and we plan on including a lot of cool content on the website and you will be notified 
+about the same as soon as its out, through our mailing service. We plan on adding the 
+following content in our website as time progresses: </p>
+
+<ul>
+	<li>A blog, to following the recent activities of us, and any of your favorite bands.</li>
+	<li>Gear Review and tutorials on live sound and how we do, what we do, live.</li>
+	<li>In-depth video tutorial series on science of recording, mixing and mastering your own album, 
+		right from your bedroom.</li>
+</ul>
+		
+<p>We are plenty excited about the days to come. And as always, we would love to hear from you, so if 
+there are any suggestions, enquiries or limericks that you would like to share with us, please feel 
+free to drop a mail to <a href='mailto:thegoofolk@farfetchd-official.com'>thegoodfolk@farfetchd-official.com</a>.</p>
+
+<p>Peace!<br><b>Farfetch'd</b><p>
+<br>
+<p style="font-size: .8em; color: grey;">We hope we are not spamming you, but at any point of time you would like 
+to unsubscribe from our mailing list, click <a href="${unsubscribeLink}">here</a>.</p>
+
+</body>
+</html>
