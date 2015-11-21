@@ -192,9 +192,9 @@
 	</div>
 	</nav>
 
-	<div class="contact-lightbox-dark" style="display: none;"></div>
+	<div class="contact-lightbox-dark"></div>
 
-	<div class="contact-lightbox-bright" style="display: none;">
+	<div class="contact-lightbox-bright">
 		<div class="textual-content">
 			<p class="customfont">Contact Us</p>
 			<p>Do you want to book the band? Or report a bug? Do you want to
@@ -239,9 +239,9 @@
 		</div>
 	</div>
 
-	<div class="bookus-lightbox-dark" style="display: none;"></div>
+	<div class="bookus-lightbox-dark"></div>
 
-	<div class="bookus-lightbox-bright" style="display: none;">
+	<div class="bookus-lightbox-bright">
 		<div class="textual-content">
 			<p class="customfont">Book Us</p>
 			<h3>Why Should you hire us?</h3>
