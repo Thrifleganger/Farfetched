@@ -35,11 +35,27 @@ public class AjaxAction {
 		HttpServletResponse response = ServletActionContext.getResponse();
 		Map<String,Map<String,String>> consolidatedResult = new HashMap();
 		
-		String method = request.getQueryString();
-		System.out.println("Query String: "+method);
+		String queryString = request.getQueryString();
+		String[] params = queryString.split("&");
+		String[] keyVal;
 		
-		if(method.contains("populateBlogEntriesOnPageLoad")){
-			consolidatedResult = populateBlogEntriesOnPageLoad();
+		Map<String,String> paramMap = new HashMap();
+		
+		for(int i = 0; i < params.length; i++){
+			
+			keyVal = params[i].split("=");
+			paramMap.put(keyVal[0], keyVal[1]);
+			
+		}
+		
+		System.out.println("Query String: "+queryString);
+		
+		if(paramMap.containsKey("method")){
+			if(paramMap.get("method").toString().equals("populateBlogEntriesOnPageLoad")){
+				consolidatedResult = populateBlogEntriesOnPageLoad();
+			} else if(paramMap.get("method").toString().equals("fetchMoreBlogEntries")){
+				consolidatedResult = fetchAdditionalResults(paramMap.get("globalCounter").toString(),paramMap.get("sortBy").toString());
+			}
 		}
 		
 		String json = new Gson().toJson(consolidatedResult);
@@ -59,17 +75,53 @@ public class AjaxAction {
 		System.out.println("Inside populateBlogEntriesOnPageLoad");
 		ResultSet resultSet = jdbcHelper.fetchBlogEntriesOnPageLoad();
 		Map<String,Map<String,String>> consolidatedResult = new HashMap();
+			
+		Integer counter = 1;
+		
+		consolidatedResult = populateResponseMap(resultSet, counter);
+		
+		return consolidatedResult;
+	}
+	
+	public Map<String,Map<String,String>> fetchAdditionalResults(String globalCounter, String sortBy) throws SQLException{
+		
+		System.out.println("Inside fetchAdditionalResults()");
+		Map<String,Map<String,String>> consolidatedResult = new HashMap();
+		ResultSet resultSet = null;
+		int numberOfRows = 0;
+		
+		if(sortBy.equals("default")){
+			System.out.println("Inside sortBy : default");
+			resultSet = jdbcHelper.fetchAdditionalResultsByTime();
+		} 
+		
+		if(resultSet.last()){
+			numberOfRows = resultSet.getRow();
+			resultSet.beforeFirst();
+		}
+		
+		if(Integer.parseInt(globalCounter) > numberOfRows){
+			consolidatedResult = null;
+		} else{
+			resultSet.absolute(Integer.parseInt(globalCounter)-1);
+			consolidatedResult = populateResponseMap(resultSet, Integer.parseInt(globalCounter));
+		}
+		
+		return consolidatedResult;
+	}
+	
+	public Map<String,Map<String,String>> populateResponseMap(ResultSet resultSet, int counter) throws SQLException{
 		
 		String title = EMPTY;
 		String description = EMPTY;
-		String image = EMPTY;		
-		Integer counter = 0;
+		String image = EMPTY;
+		
+		Map<String,Map<String,String>> consolidatedResult = new HashMap();
 		
 		while(resultSet.next()){
 			
 			Map<String,String> individualResult = new HashMap();
 			
-			counter++;
 			title = resultSet.getString("title");
 			description = resultSet.getString("description");
 			image = resultSet.getString("image_location");
@@ -80,8 +132,9 @@ public class AjaxAction {
 			individualResult.put("description", description);
 			individualResult.put("image", image);
 			
-			consolidatedResult.put("blog"+counter.toString(),individualResult);
+			consolidatedResult.put("blog"+counter,individualResult);
 			
+			counter++;
 		}
 		
 		return consolidatedResult;

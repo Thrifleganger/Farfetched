@@ -362,4 +362,23 @@ public class JDBCHelper {
 		return resultSet;
 	}
 	
+	public ResultSet fetchAdditionalResultsByTime(){
+		
+		ResultSet resultSet = null;
+		try{
+			statement = (Statement) connection.createStatement();
+			String query = "SELECT * FROM BLOG_BASE JOIN IMAGE_BASE ON BLOG_BASE.IMAGE_LINK=IMAGE_BASE.IMAGE_ID";
+			resultSet = selectQuery(query); 
+
+		}catch(SQLException se){
+		      //Handle errors for JDBC
+		      se.printStackTrace();
+		}catch(Exception e){
+		      //Handle errors for Class.forName
+		      e.printStackTrace();
+		}
+		
+		return resultSet; 
+	}
+	
 }

@@ -27,17 +27,26 @@
 <script>
 	$(document).ready(
 			function() {
-
+				
+				//For enabling tooltips
+				$('[data-toggle="tooltip"]').tooltip();
+				
 				$(".contact-lightbox-dark").hide();
 				$(".contact-lightbox-bright").hide();
 
 				$(".bookus-lightbox-dark").hide();
 				$(".bookus-lightbox-bright").hide();
+				
+				$(".blogEntry-lightbox-dark").hide();
+				$(".blogEntry-lightbox-bright").hide();
 
 				//For Contact Lightbox
 				$(".contactus").click(function() {
 					$(".bookus-lightbox-dark").hide();
 					$(".bookus-lightbox-bright").hide();
+					
+					$(".blogEntry-lightbox-dark").hide();
+					$(".blogEntry-lightbox-bright").hide();
 
 					$(".contact-lightbox-dark").show();
 					$(".contact-lightbox-bright").show();
@@ -52,6 +61,9 @@
 				$(".bookus").click(function() {
 					$(".contact-lightbox-dark").hide();
 					$(".contact-lightbox-bright").hide();
+					
+					$(".blogEntry-lightbox-dark").hide();
+					$(".blogEntry-lightbox-bright").hide();
 
 					$(".bookus-lightbox-dark").show();
 					$(".bookus-lightbox-bright").show();

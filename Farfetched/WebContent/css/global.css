@@ -241,7 +241,7 @@ div.customfont {
 
 .contact-lightbox-dark
 {
-
+	display: none;
     position: fixed;
     top: 0%;
     left: 0%;
@@ -255,6 +255,7 @@ div.customfont {
 }
 .contact-lightbox-bright
 {
+	display: none;
     position: fixed;
     top: 20%;
     left: 10%;
@@ -268,7 +269,7 @@ div.customfont {
 
 .bookus-lightbox-dark
 {
-
+	display: none;
     position: fixed;
     top: 0%;
     left: 0%;
@@ -282,6 +283,7 @@ div.customfont {
 }
 .bookus-lightbox-bright
 {
+	display: none;
     position: fixed;
     top: 20%;
     left: 10%;
@@ -293,6 +295,33 @@ div.customfont {
     overflow: auto;
 }
 
+.blogEntry-lightbox-dark
+{
+	display: none;
+    position: fixed;
+    top: 0%;
+    left: 0%;
+    width: 100%;
+    height: 100%;
+    background-color: black;
+    z-index: 1001;
+    -moz-opacity: 0.8;
+    opacity: .80;
+    filter: alpha(opacity=80);
+}
+.blogEntry-lightbox-bright
+{
+	display: none;
+    position: fixed;
+    top: 10%;
+    left: 5%;
+    width: 90%;
+    height: 85%;
+    border-radius: 20px;
+    background: url("../images/body_backgrounds/skulls.png");
+    z-index: 1002;
+    overflow: auto;
+}
 
 /*ALBUM CONTENT*/
 
@@ -427,7 +456,7 @@ div.customfont {
 
 .lightbox-dark
 {
-
+	display: none;
     position: fixed;
     top: 0%;
     left: 0%;
@@ -441,6 +470,7 @@ div.customfont {
 }
 .lightbox-bright
 {
+	display: none;
     position: fixed;
     top: 20%;
     left: 10%;
@@ -507,6 +537,8 @@ div.customfont {
 	vertical-align: top;
 }
 
+/*Contact us overlay */
+
 .contact-lightbox-bright .textual-content{
 	font-size:1.1em;
 	font-family: Georgia;
@@ -546,6 +578,9 @@ div.customfont {
 .contact-lightbox-bright .textual-content td{
 	padding:15px;
 }
+
+
+/*Book us Overlay */
 
 .bookus-lightbox-bright .textual-content{
 	font-size:1.1em;
@@ -596,6 +631,51 @@ div.customfont {
 .bookus-lightbox-bright .textual-content td{
 	padding:15px;
 }
+
+
+/*Blog entry overlay */
+
+.blogEntry-lightbox-bright .textual-content{
+	font-size:1.1em;
+	font-family: Georgia;
+	text-align: justify;
+	margin: 40px;
+}
+
+.blogEntry-lightbox-bright .textual-content .customfont{
+	color: black;
+	font-size: 4em;
+	text-align: center;
+}
+
+.blogEntry-lightbox-bright .textual-content input{
+	width:100%; 
+	height:40px; 
+	border-radius:6px; 
+	border:0;
+	padding:10px;
+}
+
+.blogEntry-lightbox-bright .textual-content textarea{
+	width:100%; 
+	border-radius:6px; 
+	border:0;
+	padding:10px;
+}
+
+.blogEntry-lightbox-bright .textual-content #submit{
+	width:20%;
+}
+
+.blogEntry-lightbox-bright .textual-content table{
+	width: 100%;
+}
+
+.blogEntry-lightbox-bright .textual-content td{
+	padding:15px;
+}
+
+
 
 .album_gallery_thumnail img{
 background-color:#eae9d4;
@@ -1151,11 +1231,11 @@ left: -200px;
  	margin-top: 70px;
  }
  
- .blog-item{
+ .blog-item-container .blog-item{
  	margin-top: 30px;
  }
  
- .blog-cover-image{
+ .blog-item-container .blog-cover-image{
  	position: absolute;
  	height: 250px;
  	width:auto;
@@ -1164,7 +1244,7 @@ left: -200px;
  	overflow: hidden;
  }
  
- .blog-cover-title{
+ .blog-item-container .blog-cover-title{
  	position:absolute;
  	bottom: 0;
  	width: 100%;
@@ -1175,6 +1255,31 @@ left: -200px;
  	background: rgba(0,0,0,.3);
  }
  
+.blog-item-misc-container .no-items-to-display{
+ 	padding: 20px; 
+ 	background-color: rgba(255,255,255,.4);
+ 	border-radius: 10px;
+ 	display: none;
+ 	width: 100%
+ }
+ 
+.blog-item-misc-container .no-items-to-display p{
+	text-align: center;
+	font-size: 1.2em;
+}
+ 
+.blog-item-misc-container .more-items-to-display{
+ 	padding: 20px; 
+ 	background-color: rgba(255,255,255,.4);
+ 	border-radius: 10px;
+ 	display: none;
+ 	width: 100%
+ }
+ 
+.blog-item-misc-container .more-items-to-display p{
+	text-align: center;
+	font-size: 1.2em;
+}
  
  
  /*FOOTER*/

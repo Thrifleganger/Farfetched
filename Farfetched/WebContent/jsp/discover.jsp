@@ -38,6 +38,8 @@
 
 <script src="prettyPhoto/js/jquery.prettyPhoto.js"></script>
 
+<script src="js/validation.js"></script>
+
 <style type="text/css">
 </style>
 

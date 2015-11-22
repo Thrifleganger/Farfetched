@@ -33,6 +33,8 @@
 
 <script src="prettyPhoto/js/jquery.prettyPhoto.js"></script>
 
+<script src="js/validation.js"></script>
+
 <script type="text/javascript">
 
 $(document).ready(function(){

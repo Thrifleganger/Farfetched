@@ -8,11 +8,13 @@ create table contactus(name varchar(255),email varchar(255), contact varchar(255
 
 create table bookus(name varchar(255),email varchar(255), contact varchar(255), description longtext, time_created varchar(255));
 
-create table blog_base(blog_id int NOT NULL, title varchar(255), description text, type varchar(50), event_date date, venue varchar(50), time varchar(50),
+create table blog_base(blog_id int auto_increment primary key, title varchar(255), description text, type varchar(50), event_date date, venue varchar(50), time varchar(50),
  cover varchar(50), video_link text, audio_link text, image_link text, rsvp text, fav_count int, buy_link text, stars int, date_created date,
  date_approved date, visibility varchar(10), status varchar(20))
 
-create table image_base(image_id int, image_type varchar(10), image_siz varchar(20), image_location varchar(255), blog_id int, primary key (image_id), 
+create table image_base(image_id int auto_increment primary key, image_type varchar(10), image_siz varchar(20), image_location varchar(255), blog_id int, 
 foreign key (blog_id) references blog_base(blog_id));
 
-create table link_base(link_id int, link text, domain varchar(50), blog_id int, primary key (link_id), foreign key (blog_id) references blog_base(blog_id));
+create table link_base(link_id int auto_increment primary key, link text, domain varchar(50), blog_id int, foreign key (blog_id) references blog_base(blog_id));
+
+alter table blog_base auto_increment=1000;

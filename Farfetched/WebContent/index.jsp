@@ -244,8 +244,7 @@ $(document).ready(function(){
     $('.soundcloud-previous-button').click(function() {
         widget.prev();
       });
-	
-    $('[data-toggle="tooltip"]').tooltip(); 
+	 
     
 	//Slick Carousel JQuery
 	$('.video-carousel').slick({
