@@ -648,7 +648,7 @@ div.customfont {
 	text-align: center;
 }
 
-.blogEntry-lightbox-bright .textual-content input{
+.blogEntry-lightbox-bright .textual-content input,select{
 	width:100%; 
 	height:40px; 
 	border-radius:6px; 
@@ -1280,8 +1280,56 @@ left: -200px;
 	text-align: center;
 	font-size: 1.2em;
 }
+
+#blogEntry-form .blog-video-link{
+	width: 100%;
+	float: left;
+}
  
+#blogEntry-form .addVideoLinkButton{
+	width: 4%;
+	height: 42px;
+	float: right;
+}
  
+#blogEntry-form .blog-audio-link{
+	width: 100%;
+	float: left;
+}
+ 
+#blogEntry-form .addAudioLinkButton{
+	width: 4%;
+	height: 42px;
+	float: right;
+}
+
+#blogEntry-form .full-width{
+	display: block; 
+	overflow: hidden; 
+	padding-right: 15px;
+}
+
+#blogEntry-form .blog-image{
+	width: 100%;
+	float: left;
+}
+
+#blogEntry-form #uploadImageButton{
+	width: auto;
+	height: 42px;
+	float: right;
+}
+
+#blogEntry-form #blog-display-this{
+	float: left; 
+	margin: 0px 10px 10px 10px;
+}
+
+#blogEntry-form #blog-display-checkbox{
+	float: left;
+}
+
+
  /*FOOTER*/
 
 .footer{
