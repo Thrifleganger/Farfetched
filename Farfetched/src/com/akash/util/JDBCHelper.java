@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.struts2.ServletActionContext;
 
+import com.akash.blog.BlogEntryBean;
 import com.mysql.jdbc.Connection;
 import com.mysql.jdbc.Statement;
 
@@ -23,8 +24,11 @@ public class JDBCHelper {
 	private String USER = null;
 	private String PASS = "tuffy6543";
 	private Connection connection = null;
+	private PreparedStatement pStatement = null;
 	private Statement statement = null;
 	private ResultSet result = null;
+	
+	BlogEntryBean blog = new BlogEntryBean();
 	
 	
 	public JDBCHelper(){
@@ -379,6 +383,85 @@ public class JDBCHelper {
 		}
 		
 		return resultSet; 
+	}
+	
+	public int getMaxImageIdFromImageBase(){
+		
+		int maxNumber = 0;
+		try{
+			statement = (Statement) connection.createStatement();
+			String query = "SELECT MAX(IMAGE_ID) FROM IMAGE_BASE";
+			result = statement.executeQuery(query);
+			result.next();
+			
+			maxNumber = result.getInt(1);
+			System.out.println("Maximum imageID: "+maxNumber);
+
+		}catch(SQLException se){
+		      //Handle errors for JDBC
+		      se.printStackTrace();
+		}catch(Exception e){
+		      //Handle errors for Class.forName
+		      e.printStackTrace();
+		}
+		return maxNumber;
+	}
+	
+	public int imageBasePartialFill(BlogEntryBean blog){
+
+		int affectedRows = 0;
+		try{
+			pStatement = connection.prepareStatement("INSERT INTO IMAGE_BASE(IMAGE_LOCATION,IMAGE_TYPE,FILENAME,IMAGE_SIZE) VALUES(?,?,?,?)");
+			pStatement.setString(1, blog.getImageLocation());
+			pStatement.setString(2, blog.getImageType());
+			pStatement.setString(3, blog.getImageFileName());
+			pStatement.setLong(4, blog.getImageSize());
+			
+			System.out.println("Image loc: "+blog.getImageLocation());
+			affectedRows = pStatement.executeUpdate();
+			System.out.println("Inserted partial entry to IMAGE_BASE, rows affected: "+affectedRows);
+
+		}catch(SQLException se){
+		      //Handle errors for JDBC
+		      se.printStackTrace();
+		}catch(Exception e){
+		      //Handle errors for Class.forName
+		      e.printStackTrace();
+		}
+		return affectedRows;
+		
+	}
+	
+	public int linkBasePartialFill(String link, String domain, String type){
+
+		int affectedRows = 0;
+		ResultSet resultSet = null;
+		try{
+			pStatement = connection.prepareStatement("INSERT INTO LINK_BASE(LINK,DOMAIN,TYPE) VALUES(?,?,?)");
+			pStatement.setString(1, link);
+			pStatement.setString(2, domain);
+			pStatement.setString(3, type);
+			
+			affectedRows = pStatement.executeUpdate();
+			System.out.println("Inserted partial entry to LINK_BASE, rows affected: "+affectedRows);
+			if(affectedRows == 1){
+				resultSet = selectQuery("SELECT MAX(LINK_ID) FROM LINK_BASE");
+				resultSet.next();
+				return resultSet.getInt(1);
+			} else{
+				return -1;
+			}
+			
+
+		}catch(SQLException se){
+		      //Handle errors for JDBC
+		      se.printStackTrace();
+		}catch(Exception e){
+		      //Handle errors for Class.forName
+		      e.printStackTrace();
+		}
+		return affectedRows;
+		
 	}
 	
 }

@@ -11,6 +11,8 @@
 
 <link rel="stylesheet" href="css/ImageTransform.css">
 
+<link rel="stylesheet" href="css/jquery.ptTimeSelect.css">
+
 <!-- Latest compiled and minified CSS -->
 <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
 
@@ -27,12 +29,16 @@
 <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
 
 <script src="js/validation.js"></script>
+<script src="js/jquery.ptTimeSelect.js"></script>
 
 <script>
 
 $(document).ready(function(){ 
 	
 	$( ".datepicker" ).datepicker();
+	$('#blog-time').ptTimeSelect({
+		zIndex: 100000,
+	});
 	
 	$(".createBlog").click(function() {
 		$(".blogEntry-lightbox-dark").show();
@@ -55,6 +61,7 @@ $(document).ready(function(){
 		success: function (jsonResponse) {
 			alert(jsonResponse);
 			
+			$('.cssload-plus-loader').fadeOut();
 			var myJSONText= jQuery.parseJSON(jsonResponse.replace(/(\/\*|\*\/)/g, ''));				
 			var counter;
 			var isEmpty = false;
@@ -152,7 +159,7 @@ $(document).ready(function(){
 			'<td>'+
 				'<div class="black-btn addVideoLinkButton deleteVideoLinkButton">-'+					
 				'</div>'+					
-				'<span class="full-width"><input type="text" id="blog-video-'+videoLinkCounter+'" name="blog-video-'+videoLinkCounter+'"'+
+				'<span class="full-width"><input type="text" id="blog-video-'+videoLinkCounter+'" name="blog.video"'+
 					'placeholder="Video link '+videoLinkCounter+'" data-toggle="tooltip" class="blog-video-link"'+
 					'title="Add a link to a video. Youtube and Vimeo supported" value=""/></span>'+				
 			'</td>'+
@@ -176,7 +183,7 @@ $(document).ready(function(){
 			'<td>'+
 				'<div class="black-btn addAudioLinkButton deleteAudioLinkButton">-'+					
 				'</div>'+
-				'<span class="full-width"><input type="text" id="blog-audio-'+audioLinkCounter+'" name="blog-audio-'+audioLinkCounter+'"'+
+				'<span class="full-width"><input type="text" id="blog-audio-'+audioLinkCounter+'" name="blog.audio"'+
 					'placeholder="Audio link '+audioLinkCounter+'" data-toggle="tooltip" class="blog-audio-link"'+
 					'title="Add a link to a song. SoundCloud and Bandcamp supported" value=""/></span>'+									
 			'</td>'+
@@ -198,6 +205,24 @@ $(document).ready(function(){
 	
 	$('#imageBrowse').on('change',function(){
 		$('#blog-image').val($('#imageBrowse').val());
+		/* var fd = new FormData($("blogEntry-form")[0]);
+		var files = event.target.files;
+		$.each(files, function(key, value)
+			    {
+			fd.append(key, value);
+			    });
+		$.ajax({
+			url:'/Farfetched/ajaxAction',
+			type: "POST",
+			data: fd,
+            enctype: 'multipart/form-data',
+            processData: false,  
+            contentType: false, 
+			success: function (jsonResponse) {
+				
+			}
+		}); */
+		
 	});
 	
 	$('#blog-type').on('change',function(){
@@ -225,11 +250,11 @@ $(document).ready(function(){
 			about, or your own, you can create it here.</p>
 
 			<s:form name="blogEntry-form" id="blogEntry-form"
-				action="contactUsEntry"
+				action="blogEntrySubmission" enctype="multipart/form-data"
 				method="post" theme="simple">
 				<table>
 					<tr class="eternal">
-						<td><select id="blog-type" name="blog-type"
+						<td><select id="blog-type" name="blog.type"
 								data-toggle="tooltip" title="Select this first">
 								<option value = "-1">Select your entry type</option>
 								<option value = "event">Create an event</option>
@@ -241,12 +266,12 @@ $(document).ready(function(){
 						</td>
 					</tr>
 					<tr class="eternal">
-						<td><s:textfield id="blog-title" name="blog-title"
+						<td><s:textfield id="blog-title" name="blog.title"
 								placeholder="Title" data-toggle="tooltip" 
 								title="Give it a catchy title" value=""/></td>
 					</tr>
 					<tr class="eternal"> 
-						<td><s:textarea id="blog-description" name="blog-description"
+						<td><s:textarea id="blog-description" name="blog.description"
 								placeholder="Description..." data-toggle="tooltip" 
 								title="Description"
 								rows="6" cols="" value=""/>
@@ -256,22 +281,22 @@ $(document).ready(function(){
 						<td>
 							<div class="row">
 								<div class="col-md-3">
-									<s:textfield id="blog-event-date" class="datepicker" name="blog-event-date"
+									<s:textfield id="blog-event-date" class="datepicker" name="blog.event_date"
 										placeholder="Event date" data-toggle="tooltip"
 										title="When is the event?" value=""/>
 								</div>
 								<div class="col-md-3">
-									<s:textfield id="blog-time" name="blog-time"
+									<s:textfield id="blog-time" name="blog.time"
 										placeholder="Time" data-toggle="tooltip"
 										title="Where time is it at?" value=""/>
 								</div>
 								<div class="col-md-3">
-									<s:textfield id="blog-venue" name="blog-venue"
+									<s:textfield id="blog-venue" name="blog.venue"
 										placeholder="Venue" data-toggle="tooltip"
 										title="Where is it happening?" value=""/>							
 								</div>
 								<div class="col-md-3">
-									<s:textfield id="blog-cover" name="blog-cover"
+									<s:textfield id="blog-cover" name="blog.cover"
 										placeholder="Cover charge" data-toggle="tooltip"
 										title="How much is it? Break it down if there is a cover and an entry charge" value=""/>
 								
@@ -281,7 +306,7 @@ $(document).ready(function(){
 					</tr>
 					
 					<tr class="event">
-						<td><s:textfield id="blog-rsvp" name="blog-rsvp"
+						<td><s:textfield id="blog-rsvp" name="blog.rsvp"
 								placeholder="RSVP Link" data-toggle="tooltip"
 								title="Link a Facebook event page here" value=""/></td>
 					</tr>
@@ -291,7 +316,7 @@ $(document).ready(function(){
 							<td>
 								<div class="red-btn addVideoLinkButton" id="addVideoLinkButton">+					
 								</div>
-								<span class="full-width"><s:textfield id="blog-video-1" name="blog-video-1"
+								<span class="full-width"><s:textfield id="blog-video-1" name="blog.video"
 									placeholder="Video link" data-toggle="tooltip" class="blog-video-link"
 									title="Add a link to a video. Youtube and Vimeo supported" value=""/>
 								</span>								
@@ -304,7 +329,7 @@ $(document).ready(function(){
 							<td>
 								<div class="red-btn addAudioLinkButton" id="addAudioLinkButton">+					
 								</div>
-								<span class="full-width"><s:textfield id="blog-audio-1" name="blog-audio-1"
+								<span class="full-width"><s:textfield id="blog-audio-1" name="blog.audio"
 									placeholder="Audio link" data-toggle="tooltip" class="blog-audio-link"
 									title="Add a link to a song. SoundCloud and BandCamp supported" value="" />
 								</span>								
@@ -315,10 +340,11 @@ $(document).ready(function(){
 						
 						<tr class="eternal">
 							<td>
-								<input type="file" id="imageBrowse" name="imageBrowse" style="display:none;"/>
+								<s:actionerror/>
+								<input type="file" id="imageBrowse" name="blog.image" style="display:none;"/>
 								<div class="red-btn uploadImageButton" id="uploadImageButton">Upload Image					
 								</div>
-								<span class="full-width"><s:textfield id="blog-image" name="blog-image" 
+								<span class="full-width"><s:textfield id="blog-image"
 									data-toggle="tooltip" class="blog-image"
 									title="Upload an image" value="" readonly="true"/>
 								</span>						
@@ -331,24 +357,24 @@ $(document).ready(function(){
 							<td>
 								<div class="row">
 									<div class="col-md-6">
-										<s:textfield id="blog-facebook" class="blog-facebook" name="blog-facebook"
+										<s:textfield id="blog-facebook" class="blog-facebook" name="blog.facebook"
 											placeholder="Facebook Link" data-toggle="tooltip"
 											title="Enter the band's or your facebook address" value=""/>
 									</div>
 									<div class="col-md-6">
-										<s:textfield id="blog-soundcloud" name="blog-soundcloud"
+										<s:textfield id="blog-soundcloud" name="blog.soundcloud"
 											placeholder="Soundcloud Link" data-toggle="tooltip"
 											title="Enter a Soundcloud page link" value=""/>
 									</div>
 								</div>
 								<div class="row" style="margin-top: 20px;">
 									<div class="col-md-6">
-										<s:textfield id="blog-youtube" name="blog-youtube"
+										<s:textfield id="blog-youtube" name="blog.youtube"
 											placeholder="Youtube Link" data-toggle="tooltip"
 											title="Enter a Youtube channel's link" value=""/>							
 									</div>
 									<div class="col-md-6">
-										<s:textfield id="blog-twitter" name="blog-twitter"
+										<s:textfield id="blog-twitter" name="blog.twitter"
 											placeholder="Twitter Link" data-toggle="tooltip"
 											title="Tag you Twitter account here" value=""/>								
 									</div>							
@@ -365,17 +391,17 @@ $(document).ready(function(){
 							<div class="row">
 								<div class="col-md-12">							  
 							    	<p id="blog-display-this">Display this information?</p>
-							    	<div id="blog-display-checkbox"><input type="checkbox" checked style="height: 0"></div>
+							    	<div id="blog-display-checkbox"><input type="checkbox" name="blog.display_checkbox" checked style="height: 0"></div>
 								</div>							
 							</div>
 							<div class="row">
 								<div class="col-md-6">									
-									<s:textfield id="blog-author-name" class="blog-author-name" name="blog-author-name"
+									<s:textfield id="blog-author-name" class="blog-author-name" name="blog.author_name"
 										placeholder="Your name"	data-toggle="tooltip" value=""
 										title="Enter your name. You can choose to hide this information and remain anonymous"/>
 								</div>
 								<div class="col-md-6">
-									<s:textfield id="blog-author-email" name="blog-author-email"
+									<s:textfield id="blog-author-email" name="blog.author_email"
 										placeholder="Your email ID" data-toggle="tooltip" value=""
 										title="Enter your email ID. We will be sending you data regarding how your post is doing" />
 								</div>
@@ -389,6 +415,7 @@ $(document).ready(function(){
 								value="Submit" /></td>
 					</tr>
 				</table>
+				
 			</s:form>
 		</div>
 	</div>
@@ -410,10 +437,58 @@ $(document).ready(function(){
 			</div>
 		</div>
 		<div class="blog-item-container">	
-			<div style="margin-top: 30px; margin-bottom: 30px;  width:100%; height: 300px;background-color: rgba(0,0,0,.5); border-radius: 50px">
-				<img src="images/loader/301.GIF" style="width: 80px; position: relative; top: 45%; left: 45%;"/>
+		
+			<div class="cssload-plus-loader">
+			<div class="cssload-top">
+				<div class="cssload-square">
+					<div class="cssload-square">
+						<div class="cssload-square">
+							<div class="cssload-square">
+								<div class="cssload-square"><div class="cssload-square">
 			
-  			</div>
+								</div></div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="cssload-bottom">
+				<div class="cssload-square">
+					<div class="cssload-square">
+						<div class="cssload-square">
+							<div class="cssload-square">
+								<div class="cssload-square"><div class="cssload-square">
+								</div></div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="cssload-left">
+				<div class="cssload-square">
+					<div class="cssload-square">
+						<div class="cssload-square">
+							<div class="cssload-square">
+								<div class="cssload-square"><div class="cssload-square">
+								</div></div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="cssload-right">
+				<div class="cssload-square">
+					<div class="cssload-square">
+						<div class="cssload-square">
+							<div class="cssload-square">
+								<div class="cssload-square"><div class="cssload-square">
+								</div></div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			</div>
 			
 		</div>
 		

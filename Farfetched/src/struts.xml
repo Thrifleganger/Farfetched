@@ -64,5 +64,17 @@
 		<action name="ajaxAction" class="com.akash.blog.ajaxAction.AjaxAction">  
 			<result name="success">/jsp/blog.jsp</result>  
 		</action> 
+		
+		<action name="blogEntrySubmission" class="com.akash.blog.BlogSubmitAction">  
+			<interceptor-ref name="fileUpload">
+		        <param name="maximumSize">2097152</param>
+		        <param name="allowedTypes">
+		            image/png,image/gif,image/jpeg,image/pjpeg
+		        </param>
+		    </interceptor-ref>
+		    <interceptor-ref name="defaultStack"></interceptor-ref>
+		    <result name="input">/jsp/blog.jsp</result>
+			<result name="success">/jsp/blog.jsp</result>  
+		</action> 
 	</package>
 </struts>
