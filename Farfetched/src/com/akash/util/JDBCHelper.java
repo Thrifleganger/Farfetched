@@ -411,13 +411,13 @@ public class JDBCHelper {
 
 		int affectedRows = 0;
 		try{
-			pStatement = connection.prepareStatement("INSERT INTO IMAGE_BASE(IMAGE_LOCATION,IMAGE_TYPE,FILENAME,IMAGE_SIZE) VALUES(?,?,?,?)");
+			pStatement = connection.prepareStatement("INSERT INTO IMAGE_BASE(IMAGE_LOCATION,IMAGE_TYPE,FILENAME,IMAGE_SIZE,IMAGE) VALUES(?,?,?,?,?)");
 			pStatement.setString(1, blog.getImageLocation());
 			pStatement.setString(2, blog.getImageType());
 			pStatement.setString(3, blog.getImageFileName());
 			pStatement.setLong(4, blog.getImageSize());
+			pStatement.setBinaryStream(5, blog.getImageStream());
 			
-			System.out.println("Image loc: "+blog.getImageLocation());
 			affectedRows = pStatement.executeUpdate();
 			System.out.println("Inserted partial entry to IMAGE_BASE, rows affected: "+affectedRows);
 
@@ -449,9 +449,107 @@ public class JDBCHelper {
 				resultSet.next();
 				return resultSet.getInt(1);
 			} else{
-				return -1;
+				affectedRows = -1;
 			}
 			
+
+		}catch(SQLException se){
+		      //Handle errors for JDBC
+		      se.printStackTrace();
+		      affectedRows = -1;
+		}catch(Exception e){
+		      //Handle errors for Class.forName
+		      e.printStackTrace();
+		      affectedRows = -1;
+		}
+		return affectedRows;
+		
+	}
+	
+	public int blogBaseCompleteFill(BlogEntryBean blog){
+		
+		int affectedRows = 0;
+		int maxNumber = 0;
+		try{
+			pStatement = connection.prepareStatement("INSERT INTO BLOG_BASE(TITLE, DESCRIPTION, TYPE, EVENT_DATE, VENUE, " +
+					"TIME, COVER, VIDEO_LINK, AUDIO_LINK, IMAGE_LINK," +
+					" RSVP, FAV_COUNT, BUY_LINK, STARS, DATE_CREATED," +
+					"DATE_APPROVED, FACEBOOK, SOUNDCLOUD, YOUTUBE, TWITTER, " +
+					"AUTHOR_NAME, AUTHOR_EMAIL, AUTHOR_VISIBILITY,BLOG_VISIBILITY, STATUS) " +
+					"VALUES(?,?,?,?,?," +
+					"?,?,?,?,?," +
+					"?,?,?,?,?," +
+					"?,?,?,?,?," +
+					"?,?,?,?,?)");
+			
+			pStatement.setString(1, blog.getTitle());
+			pStatement.setString(2, blog.getDescription());
+			pStatement.setString(3, blog.getType());
+			pStatement.setDate(4, blog.getEvent_date());
+			pStatement.setString(5, blog.getVenue());
+			
+			pStatement.setString(6, blog.getTime());
+			pStatement.setString(7, blog.getCover());
+			pStatement.setString(8, blog.getVideoLinkId().toString().replace("[", "").replace("]", ""));
+			pStatement.setString(9, blog.getAudioLinkId().toString().replace("[", "").replace("]", ""));
+			pStatement.setInt(10, blog.getImageId());
+			
+			pStatement.setString(11, blog.getRsvp());
+			pStatement.setInt(12, blog.getFavCount());
+			pStatement.setString(13, blog.getBuyLink());
+			pStatement.setInt(14, blog.getReviewStars());
+			pStatement.setTimestamp(15, blog.getCurrentDate());
+			
+			pStatement.setTimestamp(16, blog.getApprovedDate());
+			pStatement.setString(17, blog.getFacebook());
+			pStatement.setString(18, blog.getSoundcloud());
+			pStatement.setString(19, blog.getYoutube());
+			pStatement.setString(20, blog.getTwitter());
+			
+			pStatement.setString(21, blog.getAuthor_name());
+			pStatement.setString(22, blog.getAuthor_email());
+			pStatement.setString(23, blog.getDisplay_checkbox());
+			pStatement.setString(24, blog.getVisibility());
+			pStatement.setString(25, blog.getStatus());			
+						
+			affectedRows = pStatement.executeUpdate();
+			System.out.println("Inserted blog entry to BLOG_BASE, rows affected: "+affectedRows);
+			if(affectedRows == 1){
+				result = selectQuery("SELECT MAX(BLOG_ID) FROM BLOG_BASE");
+				result.next();
+				maxNumber = result.getInt(1);
+				System.out.println("Blog ID: "+maxNumber);
+				
+			} else{
+				maxNumber = -1;
+			}
+			
+
+		}catch(SQLException se){
+		      //Handle errors for JDBC
+		      se.printStackTrace();
+		      affectedRows = -1;
+		}catch(Exception e){
+		      //Handle errors for Class.forName
+		      e.printStackTrace();
+		      affectedRows = -1;
+		}
+		
+		return maxNumber;
+		
+	}
+	
+	public byte[] retrieveImageStream(int imageId){
+		
+		byte[] image = null;
+		
+		try{
+			statement = (Statement) connection.createStatement();
+			String query = "SELECT IMAGE FROM IMAGE_BASE WHERE IMAGE_ID="+imageId;
+			result = statement.executeQuery(query);
+			result.next();
+			
+			image = result.getBytes(1);
 
 		}catch(SQLException se){
 		      //Handle errors for JDBC
@@ -460,8 +558,8 @@ public class JDBCHelper {
 		      //Handle errors for Class.forName
 		      e.printStackTrace();
 		}
-		return affectedRows;
 		
+		return image;
 	}
 	
 }

@@ -5,6 +5,10 @@
  
 <struts>
  	<constant name="struts.devMode" value="true" />
+ 	<constant name="struts.enable.SlashesInActionNames" value="true"/>
+	<constant name="struts.mapper.alwaysSelectFullNamespace" value="false"/>
+	<constant name="struts.patternMatcher" value="regex" />
+	
 	<package name="all" extends="struts-default">
  
 		<action name="index">
@@ -76,5 +80,14 @@
 		    <result name="input">/jsp/blog.jsp</result>
 			<result name="success">/jsp/blog.jsp</result>  
 		</action> 
+		
+		<action name="retrieveImageStream/{imageId}" class="com.akash.blog.util.RetrieveImageStream">  
+			<result name="success">/jsp/blog.jsp</result>  
+		</action> 
+		
+		<action name="imageUploadValidation" class="com.akash.blog.util.ImageUploadValidation">  
+			<result name="success">/jsp/blog.jsp</result>  
+		</action>
+		
 	</package>
 </struts>

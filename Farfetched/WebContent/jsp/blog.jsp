@@ -35,7 +35,9 @@
 
 $(document).ready(function(){ 
 	
-	$( ".datepicker" ).datepicker();
+	$( ".datepicker" ).datepicker({
+		dateFormat: "yy-mm-dd"
+	});
 	$('#blog-time').ptTimeSelect({
 		zIndex: 100000,
 	});
@@ -205,23 +207,24 @@ $(document).ready(function(){
 	
 	$('#imageBrowse').on('change',function(){
 		$('#blog-image').val($('#imageBrowse').val());
-		/* var fd = new FormData($("blogEntry-form")[0]);
-		var files = event.target.files;
-		$.each(files, function(key, value)
-			    {
-			fd.append(key, value);
-			    });
+		
+		var fd = new FormData();
+		fd.append('fileUpload',$("#imageBrowse")[0].files[0])
 		$.ajax({
-			url:'/Farfetched/ajaxAction',
+			url:'/Farfetched/imageUploadValidation',
 			type: "POST",
+			cache: false,
 			data: fd,
             enctype: 'multipart/form-data',
             processData: false,  
             contentType: false, 
-			success: function (jsonResponse) {
+			success: function (response) {
 				
+				if(response == "type"){
+					
+				}
 			}
-		}); */
+		}); 
 		
 	});
 	

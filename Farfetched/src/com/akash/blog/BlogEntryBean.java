@@ -1,6 +1,7 @@
 package com.akash.blog;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,7 +10,7 @@ public class BlogEntryBean {
 	private String type;
 	private String title;
 	private String description;
-	private String event_date;
+	private java.sql.Date event_date;
 	private String time;
 	private String venue;
 	private String cover;
@@ -17,11 +18,15 @@ public class BlogEntryBean {
 	private List<String> video = new ArrayList<String>();
 	private List<String> audio = new ArrayList<String>();
 	private File image;
+	private FileInputStream imageStream;
 	private String imageContentType;
 	private String imageFileName;
 	private String imageType;
 	private long imageSize;
 	private String imageLocation;
+	private int favCount;
+	private String buyLink;	
+	private int reviewStars;
 	private String facebook;
 	private String soundcloud;
 	private String youtube; 
@@ -31,8 +36,12 @@ public class BlogEntryBean {
 	private String author_email;
 	private List audioLinkId = new ArrayList();
 	private List videoLinkId = new ArrayList();
-	private String imageId;
-	private String blogId;
+	private int imageId;
+	private int blogId;
+	private java.sql.Timestamp currentDate;
+	private java.sql.Timestamp approvedDate;
+	private String visibility;
+	private String status;
 	
 	
 	public String getType() {
@@ -53,10 +62,10 @@ public class BlogEntryBean {
 	public void setDescription(String description) {
 		this.description = description;
 	}
-	public String getEvent_date() {
+	public java.sql.Date getEvent_date() {
 		return event_date;
 	}
-	public void setEvent_date(String event_date) {
+	public void setEvent_date(java.sql.Date event_date) {
 		this.event_date = event_date;
 	}
 	public String getTime() {
@@ -149,16 +158,16 @@ public class BlogEntryBean {
 	public void setVideoLinkId(List videoLinkId) {
 		this.videoLinkId = videoLinkId;
 	}
-	public String getImageId() {
+	public int getImageId() {
 		return imageId;
 	}
-	public void setImageId(String imageId) {
+	public void setImageId(int imageId) {
 		this.imageId = imageId;
 	}
-	public String getBlogId() {
+	public int getBlogId() {
 		return blogId;
 	}
-	public void setBlogId(String blogId) {
+	public void setBlogId(int blogId) {
 		this.blogId = blogId;
 	}
 	public String getCover() {
@@ -196,6 +205,54 @@ public class BlogEntryBean {
 	}
 	public void setImageLocation(String imageLocation) {
 		this.imageLocation = imageLocation;
+	}
+	public FileInputStream getImageStream() {
+		return imageStream;
+	}
+	public void setImageStream(FileInputStream imageStream) {
+		this.imageStream = imageStream;
+	}
+	public java.sql.Timestamp getCurrentDate() {
+		return currentDate;
+	}
+	public void setCurrentDate(java.sql.Timestamp currentDate) {
+		this.currentDate = currentDate;
+	}
+	public java.sql.Timestamp getApprovedDate() {
+		return approvedDate;
+	}
+	public void setApprovedDate(java.sql.Timestamp approvedDate) {
+		this.approvedDate = approvedDate;
+	}
+	public String getVisibility() {
+		return visibility;
+	}
+	public void setVisibility(String visibility) {
+		this.visibility = visibility;
+	}
+	public String getStatus() {
+		return status;
+	}
+	public void setStatus(String status) {
+		this.status = status;
+	}
+	public int getFavCount() {
+		return favCount;
+	}
+	public void setFavCount(int favCount) {
+		this.favCount = favCount;
+	}
+	public String getBuyLink() {
+		return buyLink;
+	}
+	public void setBuyLink(String buyLink) {
+		this.buyLink = buyLink;
+	}
+	public int getReviewStars() {
+		return reviewStars;
+	}
+	public void setReviewStars(int reviewStars) {
+		this.reviewStars = reviewStars;
 	}
 
 }

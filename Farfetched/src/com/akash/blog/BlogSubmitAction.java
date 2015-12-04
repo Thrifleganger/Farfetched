@@ -4,10 +4,12 @@
 package com.akash.blog;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.io.FileUtils;
@@ -25,6 +27,7 @@ import com.opensymphony.xwork2.ActionSupport;
 public class BlogSubmitAction extends ActionSupport implements ServletRequestAware{
 	
 	HttpServletRequest request = ServletActionContext.getRequest();
+	ServletContext servletContext = ServletActionContext.getServletContext();
 	
 	BlogEntryBean blog = new BlogEntryBean();
 	JDBCHelper jdbcHelper = new JDBCHelper();
@@ -37,21 +40,33 @@ public class BlogSubmitAction extends ActionSupport implements ServletRequestAwa
 		
 		printBlogFormFieldValues();	
 		
-		isSaved = saveImageOnFileSystem(blog.getImage());
+		if(blog.getImage() != null){
+			if(blog.getImage().exists()){
+				isSaved = saveImageOnFileSystem(blog.getImage());
+			}
+		}
 		
 		if(isSaved){
 			count = jdbcHelper.imageBasePartialFill(blog);
 			if(count == 1){
-				prepareLinksForEntry();
+				if(!blog.getAudio().isEmpty()){
+					prepareAudioLinksForEntry();
+				}
+				if(!blog.getVideo().isEmpty()){
+					prepareVideoLinksForEntry();
+				}
+				
 				System.out.println(blog.getAudioLinkId().toString());
 				
 			}
 		}
-			
+		
+		prepareBlogForEntry();
 		
 		return "success";
 	}
-	
+	 
+	@SuppressWarnings("deprecation")
 	boolean saveImageOnFileSystem(File tempImageLoc){
 		
 		Integer imageId = jdbcHelper.getMaxImageIdFromImageBase()+1;
@@ -69,8 +84,11 @@ public class BlogSubmitAction extends ActionSupport implements ServletRequestAwa
 			FileUtils.copyFile(tempImageLoc, destinationFile);
 			blog.setImageLocation(destinationFile.toString());
 			blog.setImageSize(destinationFile.length());
-			blog.setImageFileName(fileName+"."+extension);
+			blog.setImageFileName(fileName+"."+extension);			
+			blog.setImageStream(new FileInputStream(destinationFile));
+			
 			isSaved = true;
+			
 		} catch (IOException e) {
 			isSaved = false;
 			e.printStackTrace();
@@ -79,24 +97,22 @@ public class BlogSubmitAction extends ActionSupport implements ServletRequestAwa
 		}
    	 	
    	 	System.out.println("destination file path: "+destinationFile.toString());
-   	 	System.out.println("Image si)ze: "+blog.getImageSize());
+   	 	System.out.println("Image size: "+blog.getImageSize());
    	 	
    	 	return isSaved;
 	}
 	
-	void prepareLinksForEntry(){
+	boolean prepareAudioLinksForEntry(){
 		String domain = "";
+		boolean isSuccess = true;
 		int link_id;
 		for(String audioLink : blog.getAudio()){
 			try {
 				URI audioURL = new URI(audioLink);
-				String domainFull = audioURL.getHost();
-				if(domainFull.startsWith("www.")){
-					domain = domainFull.substring(4,domainFull.indexOf("."));							
-				} else{
-					domain = domainFull.substring(0,domainFull.indexOf("."));
-				}
+				domain = audioURL.getHost();				
 			} catch (URISyntaxException e) {
+				e.printStackTrace();
+			} catch (Exception e){
 				e.printStackTrace();
 			}
 			
@@ -104,30 +120,88 @@ public class BlogSubmitAction extends ActionSupport implements ServletRequestAwa
 			System.out.println("New audio link added, link_id: "+link_id);
 			if(link_id != -1){
 				blog.getAudioLinkId().add(link_id);
+				isSuccess = true;
+			} else{
+				isSuccess = false;
 			}
 		}
+		return isSuccess;
+	}
+		
+	boolean prepareVideoLinksForEntry(){
+		String domain = "";
+		boolean isSuccess = true;
+		int link_id;
+		for(String videoLink : blog.getVideo()){
+			try {
+				URI videoURL = new URI(videoLink);
+				domain = videoURL.getHost();				
+			} catch (URISyntaxException e) {
+				e.printStackTrace();
+			} catch (Exception e){
+				e.printStackTrace();
+			}
+			
+			link_id = jdbcHelper.linkBasePartialFill(videoLink, domain, "video");
+			System.out.println("New video link added, link_id: "+link_id);
+			if(link_id != -1){
+				blog.getVideoLinkId().add(link_id);
+				isSuccess = true;
+			} else{
+				isSuccess = false;
+			}
+		}
+		return isSuccess;
+	}
+	
+	boolean prepareBlogForEntry(){
+		
+		boolean isSuccess = false;
+		
+		java.util.Date currentJavaDate = new java.util.Date();
+		java.sql.Timestamp currentSQLDate = new java.sql.Timestamp(currentJavaDate.getTime());	
+		System.out.println("JavaDate: "+currentJavaDate+" SQLDate: "+currentSQLDate);
+		blog.setCurrentDate(currentSQLDate);	
+		
+		int blog_id = jdbcHelper.blogBaseCompleteFill(blog);
+		
+		if(blog_id != -1){
+			blog.setBlogId(blog_id);
+			isSuccess = true;
+		} else{
+			isSuccess = false;
+		}
+		
+		return isSuccess;
 	}
 	
 	
 	void printBlogFormFieldValues(){
-		System.out.println("Values passed: ");
-		System.out.println("Type: "+blog.getType());
-		System.out.println("Title: "+blog.getTitle());
-		System.out.println("Description: "+blog.getDescription());
-		System.out.println("Date: "+blog.getEvent_date());
-		System.out.println("Time: "+blog.getTime());
-		System.out.println("Venue: "+blog.getVenue());
-		System.out.println("RSVP: "+blog.getRsvp());
-		System.out.println("Video Link: "+blog.getVideo().toString());
-		System.out.println("Audio Link: "+blog.getAudio().toString());
-		System.out.println("image: "+blog.getImage().toString());
-		System.out.println("Facebook: "+blog.getFacebook());
-		System.out.println("Soundcloud: "+blog.getSoundcloud());
-		System.out.println("Youtube: "+blog.getYoutube());
-		System.out.println("Twitter: "+blog.getTwitter());
-		System.out.println("Display checkbox: "+blog.getDisplay_checkbox());
-		System.out.println("Author name: "+blog.getAuthor_name());
-		System.out.println("Author email: "+blog.getAuthor_email());
+		
+		try{
+			System.out.println("Values passed: ");
+			System.out.println("Type: "+blog.getType());
+			System.out.println("Title: "+blog.getTitle());
+			System.out.println("Description: "+blog.getDescription());
+			System.out.println("Date: "+blog.getEvent_date());
+			System.out.println("Time: "+blog.getTime());
+			System.out.println("Venue: "+blog.getVenue());
+			System.out.println("RSVP: "+blog.getRsvp());
+			System.out.println("Video Link: "+blog.getVideo().toString());
+			System.out.println("Audio Link: "+blog.getAudio().toString());
+			if(blog.getImage() != null){
+				System.out.println("image: "+blog.getImage().toString());
+			}
+			System.out.println("Facebook: "+blog.getFacebook());
+			System.out.println("Soundcloud: "+blog.getSoundcloud());
+			System.out.println("Youtube: "+blog.getYoutube());
+			System.out.println("Twitter: "+blog.getTwitter());
+			System.out.println("Display checkbox: "+blog.getDisplay_checkbox());
+			System.out.println("Author name: "+blog.getAuthor_name());
+			System.out.println("Author email: "+blog.getAuthor_email());
+		} catch(Exception e){
+			e.printStackTrace();
+		}
 	}
 
 	public BlogEntryBean getBlog() {
