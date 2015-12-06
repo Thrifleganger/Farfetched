@@ -5,9 +5,14 @@ package com.akash.blog;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Locale;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
@@ -42,26 +47,41 @@ public class BlogSubmitAction extends ActionSupport implements ServletRequestAwa
 		
 		if(blog.getImage() != null){
 			if(blog.getImage().exists()){
-				isSaved = saveImageOnFileSystem(blog.getImage());
+				try {
+					blog.setImageStream(new FileInputStream(blog.getImage()));
+				} catch (FileNotFoundException e) {
+					e.printStackTrace();
+				}
+				blog.setImageId(jdbcHelper.imageBaseIdEntry(blog));
+				if(blog.getImageId() != -1){
+					isSaved = saveImageOnFileSystem(blog.getImage());
+					if(isSaved){
+						jdbcHelper.imageBasePartialFill(blog);
+					}
+				}
 			}
 		}
-		
-		if(isSaved){
-			count = jdbcHelper.imageBasePartialFill(blog);
-			if(count == 1){
-				if(!blog.getAudio().isEmpty()){
-					prepareAudioLinksForEntry();
-				}
-				if(!blog.getVideo().isEmpty()){
-					prepareVideoLinksForEntry();
-				}
-				
-				System.out.println(blog.getAudioLinkId().toString());
-				
-			}
+
+		if(!blog.getAudio().isEmpty()){
+			prepareAudioLinksForEntry();
 		}
-		
-		prepareBlogForEntry();
+		if(!blog.getVideo().isEmpty()){
+			prepareVideoLinksForEntry();
+		}
+
+		if(prepareBlogForEntry()){
+			
+			jdbcHelper.imageBaseCompleteFill(blog);
+			
+			for(Integer audioLinkID : blog.getAudioLinkId()){
+				jdbcHelper.linkBaseCompleteFill(blog,audioLinkID);
+			}
+			for(Integer videoLinkID : blog.getVideoLinkId()){
+				jdbcHelper.linkBaseCompleteFill(blog,videoLinkID);
+			}
+			
+			System.out.println("Completed insertion of links to LINK_BASE");
+		}
 		
 		return "success";
 	}
@@ -69,7 +89,7 @@ public class BlogSubmitAction extends ActionSupport implements ServletRequestAwa
 	@SuppressWarnings("deprecation")
 	boolean saveImageOnFileSystem(File tempImageLoc){
 		
-		Integer imageId = jdbcHelper.getMaxImageIdFromImageBase()+1;
+		Integer imageId = blog.getImageId();
 		String fileName = imageId.toString();
 		String extension = blog.getImageFileName().substring(blog.getImageFileName().lastIndexOf(".")+1);
 		blog.setImageType(extension); 	
@@ -85,7 +105,6 @@ public class BlogSubmitAction extends ActionSupport implements ServletRequestAwa
 			blog.setImageLocation(destinationFile.toString());
 			blog.setImageSize(destinationFile.length());
 			blog.setImageFileName(fileName+"."+extension);			
-			blog.setImageStream(new FileInputStream(destinationFile));
 			
 			isSaved = true;
 			
@@ -161,8 +180,18 @@ public class BlogSubmitAction extends ActionSupport implements ServletRequestAwa
 		java.util.Date currentJavaDate = new java.util.Date();
 		java.sql.Timestamp currentSQLDate = new java.sql.Timestamp(currentJavaDate.getTime());	
 		System.out.println("JavaDate: "+currentJavaDate+" SQLDate: "+currentSQLDate);
-		blog.setCurrentDate(currentSQLDate);	
+		blog.setCurrentDate(currentSQLDate);			
 		
+		try {
+			DateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
+			java.util.Date eventDate;
+			eventDate = format.parse(blog.getEvent_date());
+			System.out.println("Event date: "+eventDate); 
+			blog.setEventDate(new java.sql.Date(eventDate.getTime()));
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+				
 		int blog_id = jdbcHelper.blogBaseCompleteFill(blog);
 		
 		if(blog_id != -1){

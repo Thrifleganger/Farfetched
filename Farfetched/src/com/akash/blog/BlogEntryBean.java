@@ -10,7 +10,8 @@ public class BlogEntryBean {
 	private String type;
 	private String title;
 	private String description;
-	private java.sql.Date event_date;
+	private String event_date;
+	private java.sql.Date eventDate;
 	private String time;
 	private String venue;
 	private String cover;
@@ -34,8 +35,8 @@ public class BlogEntryBean {
 	private String display_checkbox;
 	private String author_name;
 	private String author_email;
-	private List audioLinkId = new ArrayList();
-	private List videoLinkId = new ArrayList();
+	private List<Integer> audioLinkId = new ArrayList<Integer>();
+	private List<Integer> videoLinkId = new ArrayList<Integer>();
 	private int imageId;
 	private int blogId;
 	private java.sql.Timestamp currentDate;
@@ -62,10 +63,10 @@ public class BlogEntryBean {
 	public void setDescription(String description) {
 		this.description = description;
 	}
-	public java.sql.Date getEvent_date() {
+	public String getEvent_date() {
 		return event_date;
 	}
-	public void setEvent_date(java.sql.Date event_date) {
+	public void setEvent_date(String event_date) {
 		this.event_date = event_date;
 	}
 	public String getTime() {
@@ -146,16 +147,16 @@ public class BlogEntryBean {
 	public void setAuthor_email(String author_email) {
 		this.author_email = author_email;
 	}
-	public List getAudioLinkId() {
+	public List<Integer> getAudioLinkId() {
 		return audioLinkId;
 	}
-	public void setAudioLinkId(List audioLinkId) {
+	public void setAudioLinkId(List<Integer> audioLinkId) {
 		this.audioLinkId = audioLinkId;
 	}
-	public List getVideoLinkId() {
+	public List<Integer> getVideoLinkId() {
 		return videoLinkId;
 	}
-	public void setVideoLinkId(List videoLinkId) {
+	public void setVideoLinkId(List<Integer> videoLinkId) {
 		this.videoLinkId = videoLinkId;
 	}
 	public int getImageId() {
@@ -253,6 +254,12 @@ public class BlogEntryBean {
 	}
 	public void setReviewStars(int reviewStars) {
 		this.reviewStars = reviewStars;
+	}
+	public java.sql.Date getEventDate() {
+		return eventDate;
+	}
+	public void setEventDate(java.sql.Date eventDate) {
+		this.eventDate = eventDate;
 	}
 
 }

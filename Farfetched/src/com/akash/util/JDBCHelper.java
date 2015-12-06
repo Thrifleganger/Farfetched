@@ -371,7 +371,8 @@ public class JDBCHelper {
 		ResultSet resultSet = null;
 		try{
 			statement = (Statement) connection.createStatement();
-			String query = "SELECT * FROM BLOG_BASE JOIN IMAGE_BASE ON BLOG_BASE.IMAGE_LINK=IMAGE_BASE.IMAGE_ID";
+			String query = "SELECT * FROM BLOG_BASE JOIN IMAGE_BASE ON BLOG_BASE.IMAGE_LINK=IMAGE_BASE.IMAGE_ID JOIN LINK_BASE ON " +
+					"BLOG_BASE.LINK";
 			resultSet = selectQuery(query); 
 
 		}catch(SQLException se){
@@ -407,16 +408,42 @@ public class JDBCHelper {
 		return maxNumber;
 	}
 	
+	public int imageBaseIdEntry(BlogEntryBean blog){
+		int affectedRows = 0;
+		int imageId = -1;
+		try{
+			pStatement = connection.prepareStatement("INSERT INTO IMAGE_BASE(IMAGE) VALUES(?)");
+			pStatement.setBinaryStream(1, blog.getImageStream());
+			
+			affectedRows = pStatement.executeUpdate();
+			System.out.println("Inserted partial entry to IMAGE_BASE, rows affected: "+affectedRows);
+			
+			if(affectedRows == 1){
+				result = selectQuery("SELECT MAX(IMAGE_ID) FROM IMAGE_BASE");
+				result.next();
+				imageId = result.getInt(1);
+			} 			
+
+		}catch(SQLException se){
+		      //Handle errors for JDBC
+		      se.printStackTrace();
+		}catch(Exception e){
+		      //Handle errors for Class.forName
+		      e.printStackTrace();
+		}
+		return imageId;
+	}
+	
 	public int imageBasePartialFill(BlogEntryBean blog){
 
 		int affectedRows = 0;
 		try{
-			pStatement = connection.prepareStatement("INSERT INTO IMAGE_BASE(IMAGE_LOCATION,IMAGE_TYPE,FILENAME,IMAGE_SIZE,IMAGE) VALUES(?,?,?,?,?)");
+			pStatement = connection.prepareStatement("UPDATE IMAGE_BASE SET IMAGE_LOCATION = ?,IMAGE_TYPE = ?,FILENAME = ?,IMAGE_SIZE = ? WHERE IMAGE_ID = ?");
 			pStatement.setString(1, blog.getImageLocation());
 			pStatement.setString(2, blog.getImageType());
 			pStatement.setString(3, blog.getImageFileName());
 			pStatement.setLong(4, blog.getImageSize());
-			pStatement.setBinaryStream(5, blog.getImageStream());
+			pStatement.setInt(5, blog.getImageId());
 			
 			affectedRows = pStatement.executeUpdate();
 			System.out.println("Inserted partial entry to IMAGE_BASE, rows affected: "+affectedRows);
@@ -485,7 +512,7 @@ public class JDBCHelper {
 			pStatement.setString(1, blog.getTitle());
 			pStatement.setString(2, blog.getDescription());
 			pStatement.setString(3, blog.getType());
-			pStatement.setDate(4, blog.getEvent_date());
+			pStatement.setDate(4, blog.getEventDate());
 			pStatement.setString(5, blog.getVenue());
 			
 			pStatement.setString(6, blog.getTime());
@@ -537,6 +564,47 @@ public class JDBCHelper {
 		
 		return maxNumber;
 		
+	}
+	
+	public int imageBaseCompleteFill(BlogEntryBean blog){
+		
+		int affectedRows = 0;
+		try{
+			pStatement = connection.prepareStatement("UPDATE IMAGE_BASE SET BLOG_ID = ? WHERE IMAGE_ID = ?");
+			pStatement.setInt(1, blog.getBlogId());
+			pStatement.setInt(2, blog.getImageId());
+			
+			affectedRows = pStatement.executeUpdate();
+			System.out.println("Complete insert into IMAGE_BASE, rows affected: "+affectedRows);
+
+		}catch(SQLException se){
+		      //Handle errors for JDBC
+		      se.printStackTrace();
+		}catch(Exception e){
+		      //Handle errors for Class.forName
+		      e.printStackTrace();
+		}
+		return affectedRows;
+	}
+	
+	public int linkBaseCompleteFill(BlogEntryBean blog, Integer linkId){
+		
+		int affectedRows = 0;
+		try{
+			pStatement = connection.prepareStatement("UPDATE LINK_BASE SET BLOG_ID = ? WHERE LINK_ID = ?");
+			pStatement.setInt(1, blog.getBlogId());
+			pStatement.setInt(2, linkId);
+			
+			affectedRows = pStatement.executeUpdate();
+
+		}catch(SQLException se){
+		      //Handle errors for JDBC
+		      se.printStackTrace();
+		}catch(Exception e){
+		      //Handle errors for Class.forName
+		      e.printStackTrace();
+		}
+		return affectedRows;
 	}
 	
 	public byte[] retrieveImageStream(int imageId){

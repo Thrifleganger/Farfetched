@@ -3,7 +3,6 @@
  */
 package com.akash.blog.ajaxAction;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.ResultSet;
@@ -16,6 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.struts2.ServletActionContext;
 
+import com.akash.blog.BlogEntryBean;
 import com.akash.util.JDBCHelper;
 import com.google.gson.Gson;
 
@@ -34,13 +34,13 @@ public class AjaxAction {
 		
 		HttpServletRequest request = ServletActionContext.getRequest();
 		HttpServletResponse response = ServletActionContext.getResponse();
-		Map<String,Map<String,String>> consolidatedResult = new HashMap();
+		Map<String,Map<String,String>> consolidatedResult = new HashMap<String,Map<String,String>>();
 		
 		String queryString = request.getQueryString();
 		String[] params = queryString.split("&");
 		String[] keyVal;
 		
-		Map<String,String> paramMap = new HashMap();
+		Map<String,String> paramMap = new HashMap<String,String>();
 		
 		for(int i = 0; i < params.length; i++){
 			
@@ -75,8 +75,7 @@ public class AjaxAction {
 		
 		System.out.println("Inside populateBlogEntriesOnPageLoad");
 		ResultSet resultSet = jdbcHelper.fetchBlogEntriesOnPageLoad();
-		Map<String,Map<String,String>> consolidatedResult = new HashMap();
-			
+		Map<String,Map<String,String>> consolidatedResult = new HashMap<String,Map<String,String>>();
 		Integer counter = 1;
 		
 		consolidatedResult = populateResponseMap(resultSet, counter);
@@ -87,7 +86,7 @@ public class AjaxAction {
 	public Map<String,Map<String,String>> fetchAdditionalResults(String globalCounter, String sortBy) throws SQLException{
 		
 		System.out.println("Inside fetchAdditionalResults()");
-		Map<String,Map<String,String>> consolidatedResult = new HashMap();
+		Map<String,Map<String,String>> consolidatedResult = new HashMap<String,Map<String,String>>();
 		ResultSet resultSet = null;
 		int numberOfRows = 0;
 		
@@ -113,17 +112,15 @@ public class AjaxAction {
 	
 	public Map<String,Map<String,String>> populateResponseMap(ResultSet resultSet, int counter) throws SQLException{
 		
-		String title = EMPTY;
-		String description = EMPTY;
-		String image = EMPTY;
+		BlogEntryBean blog = new BlogEntryBean();
 		
-		Map<String,Map<String,String>> consolidatedResult = new HashMap();
+		Map<String,Map<String,String>> consolidatedResult = new HashMap<String,Map<String,String>>();
 		
 		while(resultSet.next()){
 			
-			Map<String,String> individualResult = new HashMap();
+			Map<String,String> individualResult = new HashMap<String,String>();
 			
-			title = resultSet.getString("title");
+			blog.setTitle(resultSet.getString("title"));
 			description = resultSet.getString("description");
 			image = resultSet.getString("image_location");
 			

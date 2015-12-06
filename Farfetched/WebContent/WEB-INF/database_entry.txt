@@ -17,4 +17,13 @@ image longblob, blog_id int, foreign key (blog_id) references blog_base(blog_id)
 
 create table link_base(link_id int auto_increment primary key, link text, domain varchar(50), type varchar(20), blog_id int, foreign key (blog_id) references blog_base(blog_id));
 
+alter table image_base auto_increment=1000;
+
+alter table link_base auto_increment=1000;
+
 alter table blog_base auto_increment=1000;
+
+SELECT T.BLOG_ID, GROUP_CONCAT(T.LINK), GROUP_CONCAT(T.TYPE) FROM (SELECT DISTINCT BLOG_BASE.BLOG_ID, BLOG_BASE.TITLE, BLOG_BASE.DESCRIPTION,
+BLOG_BASE.TYPE, BLOG_BASE.EVENT_DATE, BLOG_BASE.VENUE,  LINK_BASE.LINK, LINK_BASE.TYPE FROM BLOG_BASE,LINK_BASE WHERE BLOG_BASE.BLOG_ID = LINK_BASE.BLOG_ID) AS T GROUP BY T.BLOG_ID;
+
+
