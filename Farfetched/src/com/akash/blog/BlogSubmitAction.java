@@ -183,11 +183,13 @@ public class BlogSubmitAction extends ActionSupport implements ServletRequestAwa
 		blog.setCurrentDate(currentSQLDate);			
 		
 		try {
-			DateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
-			java.util.Date eventDate;
-			eventDate = format.parse(blog.getEvent_date());
-			System.out.println("Event date: "+eventDate); 
-			blog.setEventDate(new java.sql.Date(eventDate.getTime()));
+			if(blog.getEvent_date() != null && !blog.getEvent_date().equals("")){
+				DateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
+				java.util.Date eventDate;
+				eventDate = format.parse(blog.getEvent_date());
+				System.out.println("Event date: "+eventDate); 
+				blog.setEventDate(new java.sql.Date(eventDate.getTime()));
+			}
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}

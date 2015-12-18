@@ -52,6 +52,9 @@ $(document).ready(function(){
 		$(".blogEntry-lightbox-dark").hide(600);
 	});
 	
+	$('.more-items-to-display').hide();
+	$('.no-items-to-display').hide();
+	
 	var globalCounter = 1;
 	var blog_counter;
 	var videoLinkCounter = 1;
@@ -75,6 +78,7 @@ $(document).ready(function(){
 				if(typeof myJSONText[blog_counter] === 'undefined'){
 					isEmpty = true;
 				    $('.no-items-to-display').fadeIn();
+				    $('.more-items-to-display').fadeOut();
 				} else{
 					createHTMLforBlogEntry(myJSONText);
 				}
@@ -149,7 +153,7 @@ $(document).ready(function(){
 		
 		
 		$('.blog-cover-title'+globalCounter).html(myJSONText[blog_counter].title);
-		$('.image-link'+globalCounter).attr("src",myJSONText[blog_counter].image);
+		$('.image-link'+globalCounter).attr("src","retrieveImageStream/"+myJSONText[blog_counter].image);
 		globalCounter++;
 	}
 	
@@ -233,6 +237,11 @@ $(document).ready(function(){
 		$('#blogEntry-form').find('tr').not('.eternal,.'+type).fadeOut();  
 		$('#blogEntry-form').find('tr.eternal,tr.'+type).fadeIn();
 		/*$('#blogEntry-form').find('tr,tbody').not(".eternal,."+type).fadeOut(); */
+	});
+	
+	$('.image-link').click(function(){
+		var $this = $(this).parent().parent();
+		$($this).toggleClass("autoHeight");
 	});
 });
 
@@ -491,6 +500,25 @@ $(document).ready(function(){
 					</div>
 				</div>
 			</div>
+			</div>
+			
+			<div style="" class="row">
+				<div class="col-md-10">
+					<div id="blog-item1" class="blog-item">
+						<div class="blog-cover-image">
+							<div class="blog-cover-popup" style="">
+								<img src="blog/liked.png" />
+							</div>
+							<img src="retrieveImageStream/1000" class="image-link image-link1">
+							<div class="blog-cover-title blog-cover-title1">Storm Festival, headlined by Storm Corrosion</div>
+						</div> 
+						<div class="collapsed-blog-content">
+							<h3 class="blog-heading">Storm Festival, headlined by Storm Corrosion </h3>
+							<div class="blog-description">If you are considering this, then you are making a valuable contribution to the rather broke and homeless musicians of Farfetch'd. Yes, we have physical copies of The Alchemist for sale, and no, we don't have too many copies left. If you want to get your hands on one of these eloquently elegant, matt-finished, fire breathing, 6 face digipacks...well, you can. Although not all the aforementioned adjectives hold true, its a small amount of money to pay for an independent band's merchandise. But there is a catch: Alright, since you're still here after reading through a whole lot of garbage, we assume you are genuinely interested. Here's how this is going to work. Please fill out the form below and click on Submit. You will receive an auto-generated email from our side explaining the due process and the account details, to whom you need to pay. Once we receive the funds, which will generally take one working day for NEFT transactions, we will process, package and ship it out to you, along with a formal acknowledgement of the payment reciept. Sound fair? </div>
+							
+						</div>
+					</div>
+				</div>
 			</div>
 			
 		</div>

@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -121,14 +122,41 @@ public class AjaxAction {
 			Map<String,String> individualResult = new HashMap<String,String>();
 			
 			blog.setTitle(resultSet.getString("title"));
-			description = resultSet.getString("description");
-			image = resultSet.getString("image_location");
+			blog.setDescription(resultSet.getString("description"));
+			blog.setType(resultSet.getString("blog_type"));
+			blog.setEventDate(resultSet.getDate("event_date"));
+			blog.setTime(resultSet.getString("time"));
+			blog.setVenue(resultSet.getString("venue"));
+			blog.setCover(resultSet.getString("cover"));
+			blog.setImageId(Integer.parseInt(resultSet.getString("image_link")));
+			blog.setRsvp(resultSet.getString("rsvp"));
+			blog.setFavCount(Integer.parseInt(resultSet.getString("fav_count")));
+			blog.setBuyLink(resultSet.getString("buy_link"));
+			blog.setReviewStars(Integer.parseInt(resultSet.getString("stars")));
+			blog.setCurrentDate(resultSet.getTimestamp("date_created"));
+			blog.setFacebook(resultSet.getString("facebook"));
+			blog.setSoundcloud(resultSet.getString("soundcloud"));
+			blog.setYoutube(resultSet.getString("youtube"));
+			blog.setTwitter(resultSet.getString("twitter"));
+			blog.setAuthor_name(resultSet.getString("author_name"));
+			blog.setAuthor_email(resultSet.getString("author_email"));
+			blog.setDisplay_checkbox(resultSet.getString("author_visibility"));
+			blog.setVisibility(resultSet.getString("blog_visibility"));
+			blog.setStatus(resultSet.getString("status"));
+			if(resultSet.getString("consolidated_links").contains(",")){
+				blog.setConsolidatedLinks(Arrays.asList(resultSet.getString("consolidated_links").split(",")));
+				blog.setConsolidatedTypes(Arrays.asList(resultSet.getString("consolidated_types").split(",")));
+			} else{
+				blog.setConsolidatedLinks(Arrays.asList(resultSet.getString("consolidated_links")));
+				blog.setConsolidatedLinks(Arrays.asList(resultSet.getString("consolidated_links")));
+			}
+			blog.setNumberOfLinks(blog.getConsolidatedLinks().size());
 			
-			System.out.println("Title: "+title+", Description: "+description+", Image: "+image);
-			
-			individualResult.put("title", title);
-			individualResult.put("description", description);
-			individualResult.put("image", image);
+			individualResult.put("title", blog.getTitle());
+			individualResult.put("description", blog.getDescription());
+			individualResult.put("type", blog.getType());
+			individualResult.put("description", blog.getDescription());
+			individualResult.put("image", blog.getImageId().toString());
 			
 			consolidatedResult.put("blog"+counter,individualResult);
 			
