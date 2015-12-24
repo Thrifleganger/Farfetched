@@ -13,6 +13,10 @@
 
 <link rel="stylesheet" href="css/jquery.ptTimeSelect.css">
 
+<link rel="stylesheet" href="js/jQueryTE/jquery-te-1.4.0.css">
+
+<link rel="stylesheet" href="css/hover.css">
+
 <!-- Latest compiled and minified CSS -->
 <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
 
@@ -33,6 +37,9 @@
 <!-- Angular Route Dependency -->
 <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.1/angular-route.min.js"></script>
 
+<!-- jQuery Text Editor -->
+<script src="js/jQueryTE/jquery-te-1.4.0.min.js"></script>
+
 <script src="js/validation.js"></script>
 <script src="js/jquery.ptTimeSelect.js"></script>
 
@@ -43,6 +50,9 @@ $(document).ready(function(){
 	$( ".datepicker" ).datepicker({
 		dateFormat: "yy-mm-dd"
 	});
+	
+	$("textarea").jqte();
+	
 	$('#blog-time').ptTimeSelect({
 		zIndex: 100000,
 	});
@@ -138,6 +148,31 @@ $(document).ready(function(){
 				$('.populateContent').html("Populated bitches!");	
 			}	
 		});	
+		
+	});
+	
+	$('.event-section-collapsable-div').click(function(){		
+		var $this = $(this);
+		$this.siblings('div.event-section').toggle();
+		$this.find('.rotate-arrow').toggleClass('rotate-arrow-on-click');		
+	});
+	
+	$('.media-section-collapsable-div').click(function(){
+		var $this = $(this);
+		$this.siblings('div.media-section').toggle();
+		$this.find('.rotate-arrow').toggleClass('rotate-arrow-on-click');
+		
+		var spinner = $this.siblings('div.media-section').find('.cssload-loader');
+		
+		$('a[href*="soundcloud.com"]').each(function(){
+			spinner.show();
+			var $link = $(this);
+		  	$.getJSON('http://soundcloud.com/oembed?format=js&url=' + $link.attr('href') + '&iframe=true&callback=?', function(response){
+				var soundcloudFrame = response.html.replace(/(height=")\d*(")/,'height="300"');
+		    	$link.replaceWith(soundcloudFrame);
+		    	spinner.hide();
+		  });
+		});
 		
 	});
 	
@@ -256,7 +291,7 @@ $(document).ready(function(){
 
 	var angularApp = angular.module('angularApp',[]);
 	
-	angularApp.controller('displayBlogController',function($scope,$http){
+	angularApp.controller('displayBlogController',function($scope,$http,$filter,$sce){
 		
 		$scope.firstName = 'Akash';
 		
@@ -266,7 +301,8 @@ $(document).ready(function(){
 			url:'/Farfetched/ajaxAction',
 			params: { "method" : "populateBlogEntriesOnPageLoad" }
 		}).then(function successCallback(response) {
-			$scope.firstName = response.data;
+			$scope.firstName = response.data;		
+			$scope.trustAsHtml = $sce.trustAsHtml;
 			$scope.counter = 0;
 			  }, function errorCallback(response) {
 			    // called asynchronously if an error occurs
@@ -546,15 +582,81 @@ $(document).ready(function(){
 					<div id="blog-item1" class="blog-item">
 						<div class="blog-cover-image">
 							<div class="blog-cover-popup" style="">
-								<img src="blog/liked.png" />
+								<div class="like-button">
+									<img src="images/blog/liked.png" />
+								</div>
+								<div class="like-count">1</div>
 							</div>
 							<img src="retrieveImageStream/1000" class="image-link image-link1">
 							<div class="blog-cover-title blog-cover-title1">Storm Festival, headlined by Storm Corrosion</div>
 						</div> 
 						<div class="collapsed-blog-content">
-							<h3 class="blog-heading">Storm Festival, headlined by Storm Corrosion </h3>
-							<div class="blog-description">If you are considering this, then you are making a valuable contribution to the rather broke and homeless musicians of Farfetch'd. Yes, we have physical copies of The Alchemist for sale, and no, we don't have too many copies left. If you want to get your hands on one of these eloquently elegant, matt-finished, fire breathing, 6 face digipacks...well, you can. Although not all the aforementioned adjectives hold true, its a small amount of money to pay for an independent band's merchandise. But there is a catch: Alright, since you're still here after reading through a whole lot of garbage, we assume you are genuinely interested. Here's how this is going to work. Please fill out the form below and click on Submit. You will receive an auto-generated email from our side explaining the due process and the account details, to whom you need to pay. Once we receive the funds, which will generally take one working day for NEFT transactions, we will process, package and ship it out to you, along with a formal acknowledgement of the payment reciept. Sound fair? </div>
-							
+							<div class="row">
+								<div class="col-md-12">
+									<h2 class="blog-heading">Storm Festival, headlined by Storm Corrosion </h2>
+									<p style="float: left;">Submitted by Akash Murthy on 20th December, 2015</p> <p style="float:right">Catagory: Event</p>
+  									<br>
+  									<hr>
+									<div class="blog-description">If you are considering this, then you are making a valuable contribution to the rather broke and homeless musicians of Farfetch'd. Yes, we have physical copies of The Alchemist for sale, and no, we don't have too many copies left. If you want to get your hands on one of these eloquently elegant, matt-finished, fire breathing, 6 face digipacks...well, you can. Although not all the aforementioned adjectives hold true, its a small amount of money to pay for an independent band's merchandise. But there is a catch: Alright, since you're still here after reading through a whole lot of garbage, we assume you are genuinely interested. Here's how this is going to work. Please fill out the form below and click on Submit. You will receive an auto-generated email from our side explaining the due process and the account details, to whom you need to pay. Once we receive the funds, which will generally take one working day for NEFT transactions, we will process, package and ship it out to you, along with a formal acknowledgement of the payment reciept. Sound fair? </div>
+									
+									<div class="sub-collapsable-div event-section-collapsable-div">
+										<img class="rotate-arrow" src="images/blog/eject.png" width="45px">Event Details
+									</div>
+									
+									<div class="event-section">
+										<div class="event-details row">
+											<div class="col-md-5">
+												<table>
+													<tr>
+														<td><b>Date:</b></td>
+														<td>23rd December</td>
+													</tr>
+													<tr>
+														<td><b>Time:</b></td>
+														<td>5:00 PM</td>
+													</tr>
+													<tr>
+														<td><b>Venue:</b></td>
+														<td>Bangalore</td>
+													</tr>
+													<tr>
+														<td><b>Cover:</b></td>
+														<td>Free</td>
+													</tr>
+												</table>
+											</div>
+											<div class="red-btn" style="float: left;">RSVP</div>
+											<div>
+												<div class="black-btn" style="float: left; margin-left: 20px;">Remind me</div>
+												<div style='height: 100px; width: 300px; border-radius: 10px; position: absolute; top: 120px; left: 180px; background: white; display:none;'>
+													<input type="text">
+												</div>
+											</div>
+										</div>					                    
+									</div>	
+									
+									<div class="sub-collapsable-div media-section-collapsable-div">
+										<img class="rotate-arrow" src="images/blog/eject.png" width="45px">Media
+									</div>														
+																		
+									<div class="media-section">
+										<div class="cssload-loader">
+											<div class="cssload-inner cssload-one"></div>
+											<div class="cssload-inner cssload-two"></div>
+											<div class="cssload-inner cssload-three"></div>
+										</div>
+										
+										<div class="link-entry">
+											<a href="https://soundcloud.com/lighting-lanterns/lighting-lanterns-wake-up-free-download"></a>
+										</div>
+										<div class="link-entry">
+											<a href="https://soundcloud.com/thrifleganger/sets/southern-skies-motel"></a>
+										</div>
+									</div>
+									
+									
+								</div>
+							</div>
 						</div>
 					</div>
 				</div>

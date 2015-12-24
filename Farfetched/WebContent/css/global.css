@@ -1268,6 +1268,32 @@ left: -200px;
    transition: all 0.4s ease-in-out;
  }
  
+ .blog-item-container .blog-cover-image .blog-cover-popup .like-button{
+	float: left 
+ }
+ 
+ .blog-item-container .blog-cover-image .blog-cover-popup .like-button img{
+	height: 50px;
+	margin-left: 20px;
+	margin-top: 10px; 
+ } 
+ 
+ .blog-item-container .blog-cover-image .blog-cover-popup .like-button img:hover{
+	cursor: pointer; 
+ }
+ 
+ .blog-item-container .blog-cover-image .blog-cover-popup .like-count{
+ 	float: left;
+ 	background-color: rgba(0, 0, 0, 0.6);
+    border-radius: 50%;
+    color: white;
+    height: auto;
+    margin: 15px 0 0 10px;
+    max-width: 100px;
+    padding: 10px 15px;
+    text-align: center;
+ }
+ 
  .blog-item-container .blog-cover-image .image-link{
  	width: 100%;
  }
@@ -1291,6 +1317,50 @@ left: -200px;
  	background: rgba(0,0,0,.3);
  }
  
+ .blog-item-container .blog-item .collapsed-blog-content {
+ 	padding: 20px 50px 100px 50px;
+ 	background-image: url('../images/body_backgrounds/wild_oliva.png');
+ 	color: white;
+ 	font-family: "Segoe-light";
+ }
+ 
+ .blog-item-container .blog-item .collapsed-blog-content .blog-description{
+ 	text-align: justify;
+ 	font-size: 1.2em;
+ } 
+ 
+ .blog-item-container .blog-item .collapsed-blog-content .event-section {
+ 	margin-top: 10px; 
+ 	background-color: rgba(255,255,255,.3); 
+ 	padding: 20px;
+ 	border-radius: 15px;
+ 	font-size: 1.2em;
+ 	-webkit-transition: all ease 0.6s;
+	-moz-transition: all ease 0.6s;
+	-o-transition: all ease 0.6s;
+	-ms-transition: all ease 0.6s;
+	transition: all ease 0.6s;
+	display: none;
+ }
+ 
+ .blog-item-container .blog-item .collapsed-blog-content .media-section {
+ 	margin-top: 10px; 
+ 	background-color: rgba(255,255,255,.3); 
+ 	padding: 1px 20px 30px 20px;
+ 	border-radius: 15px;
+ 	font-size: 1.2em;
+ 	-webkit-transition: all ease 0.6s;
+	-moz-transition: all ease 0.6s;
+	-o-transition: all ease 0.6s;
+	-ms-transition: all ease 0.6s;
+	transition: all ease 0.6s;
+	display: none;
+ }
+ 
+ .blog-item-container .blog-item .collapsed-blog-content .media-section .link-entry{
+ 	margin-top: 20px;
+ }
+ 
 .blog-item-misc-container .no-items-to-display{
  	padding: 20px; 
  	background-color: rgba(255,255,255,.4);
@@ -1301,7 +1371,7 @@ left: -200px;
  
 .blog-item-misc-container .no-items-to-display p{
 	text-align: center;
-	font-size: 1.2em;
+	font-size: 1.12em;
 }
  
 .blog-item-misc-container .more-items-to-display{

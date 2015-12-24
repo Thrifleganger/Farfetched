@@ -3,7 +3,7 @@
 		<div class="blog-item" id="blog-item">
 			<div class="blog-cover-image">
 				<img class="image-link image-link" src="{{ 'retrieveImageStream/'+ blog.image }}">
-				<div class="blog-cover-title blog-cover-title">{{blog.title}}</div>
+				<div class="blog-cover-title blog-cover-title" ng-bind-html="trustAsHtml(blog.title)"></div>
 			</div>
 		</div>
 	</div>
