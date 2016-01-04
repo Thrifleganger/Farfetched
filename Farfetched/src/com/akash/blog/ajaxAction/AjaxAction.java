@@ -37,6 +37,7 @@ public class AjaxAction {
 		HttpServletResponse response = ServletActionContext.getResponse();
 		Map<String,Map<String,String>> consolidatedResult = new HashMap<String,Map<String,String>>();
 		
+		String json = null;
 		String queryString = request.getQueryString();
 		String[] params = queryString.split("&");
 		String[] keyVal;
@@ -55,12 +56,15 @@ public class AjaxAction {
 		if(paramMap.containsKey("method")){
 			if(paramMap.get("method").toString().equals("populateBlogEntriesOnPageLoad")){
 				consolidatedResult = populateBlogEntriesOnPageLoad();
+				json = new Gson().toJson(consolidatedResult);
 			} else if(paramMap.get("method").toString().equals("fetchMoreBlogEntries")){
 				consolidatedResult = fetchAdditionalResults(paramMap.get("globalCounter").toString(),paramMap.get("sortBy").toString());
+				json = new Gson().toJson(consolidatedResult);
+			} else if(paramMap.get("method").toString().equals("updateFavCount")){
+				int favCount = updateFavCount(Integer.parseInt(paramMap.get("blogId")),paramMap.get("operation").toString());
+				json = new Gson().toJson(favCount);
 			}
 		}
-		
-		String json = new Gson().toJson(consolidatedResult);
 		
 		System.out.println("ConsolidatedResult: "+json);
 		
@@ -93,19 +97,13 @@ public class AjaxAction {
 		
 		if(sortBy.equals("default")){
 			System.out.println("Inside sortBy : default");
-			resultSet = jdbcHelper.fetchAdditionalResultsByTime();
+			resultSet = jdbcHelper.fetchAdditionalResultsByTime(Integer.parseInt(globalCounter));
 		} 
 		
-		if(resultSet.last()){
-			numberOfRows = resultSet.getRow();
-			resultSet.beforeFirst();
-		}
-		
-		if(Integer.parseInt(globalCounter) > numberOfRows){
+		if(resultSet == null){
 			consolidatedResult = null;
 		} else{
-			resultSet.absolute(Integer.parseInt(globalCounter)-1);
-			consolidatedResult = populateResponseMap(resultSet, Integer.parseInt(globalCounter));
+			consolidatedResult = populateResponseMap(resultSet, Integer.parseInt(globalCounter)+1);
 		}
 		
 		return consolidatedResult;
@@ -157,13 +155,20 @@ public class AjaxAction {
 			individualResult.put("type", blog.getType());
 			individualResult.put("description", blog.getDescription());
 			individualResult.put("image", blog.getImageId().toString());
-			
+			individualResult.put("favCount", blog.getFavCount().toString());
 			consolidatedResult.put("blog"+counter,individualResult);
 			
 			counter++;
 		}
 		
 		return consolidatedResult;
+	}
+	
+	public int updateFavCount(int blog_id, String operation){
+		
+		System.out.println("Inside updateFavCount");
+		
+		return jdbcHelper.updateFavCount(blog_id, operation);
 	}
 
 }

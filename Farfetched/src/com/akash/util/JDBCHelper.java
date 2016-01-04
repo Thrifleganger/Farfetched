@@ -353,7 +353,7 @@ public class JDBCHelper {
 		ResultSet resultSet = null;
 		try{
 			statement = (Statement) connection.createStatement();
-			String query = "SELECT *, GROUP_CONCAT(T.LINK) AS CONSOLIDATED_LINKS, GROUP_CONCAT(T.TYPE) AS CONSOLIDATED_TYPES FROM (SELECT DISTINCT BLOG_BASE.BLOG_ID, BLOG_BASE.TITLE, BLOG_BASE.DESCRIPTION, BLOG_BASE.TYPE AS BLOG_TYPE, BLOG_BASE.EVENT_DATE, BLOG_BASE.TIME, BLOG_BASE.VENUE, BLOG_BASE.COVER, BLOG_BASE.IMAGE_LINK, BLOG_BASE.RSVP, BLOG_BASE.FAV_COUNT, BLOG_BASE.BUY_LINK, BLOG_BASE.STARS, BLOG_BASE.DATE_CREATED, BLOG_BASE.FACEBOOK, BLOG_BASE.SOUNDCLOUD, BLOG_BASE.YOUTUBE, BLOG_BASE.TWITTER, BLOG_BASE.AUTHOR_NAME, BLOG_BASE.AUTHOR_EMAIL, BLOG_BASE.AUTHOR_VISIBILITY, BLOG_BASE.BLOG_VISIBILITY, BLOG_BASE.STATUS, LINK_BASE.LINK, LINK_BASE.TYPE FROM BLOG_BASE,LINK_BASE WHERE BLOG_BASE.BLOG_ID = LINK_BASE.BLOG_ID) AS T GROUP BY T.BLOG_ID;";
+			String query = "SELECT *, GROUP_CONCAT(T.LINK) AS CONSOLIDATED_LINKS, GROUP_CONCAT(T.TYPE) AS CONSOLIDATED_TYPES FROM (SELECT DISTINCT BLOG_BASE.BLOG_ID, BLOG_BASE.TITLE, BLOG_BASE.DESCRIPTION, BLOG_BASE.TYPE AS BLOG_TYPE, BLOG_BASE.EVENT_DATE, BLOG_BASE.TIME, BLOG_BASE.VENUE, BLOG_BASE.COVER, BLOG_BASE.IMAGE_LINK, BLOG_BASE.RSVP, BLOG_BASE.FAV_COUNT, BLOG_BASE.BUY_LINK, BLOG_BASE.STARS, BLOG_BASE.DATE_CREATED, BLOG_BASE.FACEBOOK, BLOG_BASE.SOUNDCLOUD, BLOG_BASE.YOUTUBE, BLOG_BASE.TWITTER, BLOG_BASE.AUTHOR_NAME, BLOG_BASE.AUTHOR_EMAIL, BLOG_BASE.AUTHOR_VISIBILITY, BLOG_BASE.BLOG_VISIBILITY, BLOG_BASE.STATUS, LINK_BASE.LINK, LINK_BASE.TYPE FROM BLOG_BASE,LINK_BASE WHERE BLOG_BASE.BLOG_ID = LINK_BASE.BLOG_ID) AS T GROUP BY T.BLOG_ID ORDER BY DATE_CREATED DESC LIMIT 5;";
 			resultSet = selectQuery(query);
 
 		}catch(SQLException se){
@@ -366,14 +366,16 @@ public class JDBCHelper {
 		return resultSet;
 	}
 	
-	public ResultSet fetchAdditionalResultsByTime(){
+	public ResultSet fetchAdditionalResultsByTime(Integer globalCounter){
 		
+		System.out.println("GlobalCounter: "+globalCounter);
 		ResultSet resultSet = null;
 		try{
-			statement = (Statement) connection.createStatement();
-			String query = "SELECT * FROM BLOG_BASE JOIN IMAGE_BASE ON BLOG_BASE.IMAGE_LINK=IMAGE_BASE.IMAGE_ID JOIN LINK_BASE ON " +
-					"BLOG_BASE.LINK";
-			resultSet = selectQuery(query); 
+			pStatement = connection.prepareStatement("SELECT *, GROUP_CONCAT(T.LINK) AS CONSOLIDATED_LINKS, GROUP_CONCAT(T.TYPE) AS CONSOLIDATED_TYPES FROM (SELECT DISTINCT BLOG_BASE.BLOG_ID, BLOG_BASE.TITLE, BLOG_BASE.DESCRIPTION, BLOG_BASE.TYPE AS BLOG_TYPE, BLOG_BASE.EVENT_DATE, BLOG_BASE.TIME, BLOG_BASE.VENUE, BLOG_BASE.COVER, BLOG_BASE.IMAGE_LINK, BLOG_BASE.RSVP, BLOG_BASE.FAV_COUNT, BLOG_BASE.BUY_LINK, BLOG_BASE.STARS, BLOG_BASE.DATE_CREATED, BLOG_BASE.FACEBOOK, BLOG_BASE.SOUNDCLOUD, BLOG_BASE.YOUTUBE, BLOG_BASE.TWITTER, BLOG_BASE.AUTHOR_NAME, BLOG_BASE.AUTHOR_EMAIL, BLOG_BASE.AUTHOR_VISIBILITY, BLOG_BASE.BLOG_VISIBILITY, BLOG_BASE.STATUS, LINK_BASE.LINK, LINK_BASE.TYPE FROM BLOG_BASE,LINK_BASE WHERE BLOG_BASE.BLOG_ID = LINK_BASE.BLOG_ID) AS T GROUP BY T.BLOG_ID ORDER BY DATE_CREATED DESC LIMIT ?,?;");
+			pStatement.setInt(1, globalCounter);
+			pStatement.setInt(2, globalCounter+5);
+			
+			resultSet = pStatement.executeQuery();
 
 		}catch(SQLException se){
 		      //Handle errors for JDBC
@@ -628,6 +630,39 @@ public class JDBCHelper {
 		}
 		
 		return image;
+	}
+	
+	public int updateFavCount(int blog_id, String operation){
+		int affectedRows = 0;
+		int favCount = 0;
+		try{
+			if(operation.equals("add")){
+				pStatement = connection.prepareStatement("UPDATE BLOG_BASE SET FAV_COUNT = FAV_COUNT + 1 WHERE BLOG_ID = ?");
+				pStatement.setInt(1, blog_id);
+			} else if(operation.equals("sub")){
+				pStatement = connection.prepareStatement("UPDATE BLOG_BASE SET FAV_COUNT = FAV_COUNT - 1 WHERE BLOG_ID = ?");
+				pStatement.setInt(1, blog_id);
+			}
+			
+			affectedRows = pStatement.executeUpdate();
+			
+			pStatement = connection.prepareStatement("SELECT FAV_COUNT FROM BLOG_BASE WHERE BLOG_ID = ?");
+			pStatement.setInt(1, blog_id);
+			
+			result = pStatement.executeQuery();
+			if(result.next()){
+				favCount = result.getInt(1);
+			}
+			System.out.println("Update favCount on "+blog_id+", operation: "+operation);
+
+		}catch(SQLException se){
+		      //Handle errors for JDBC
+		      se.printStackTrace();
+		}catch(Exception e){
+		      //Handle errors for Class.forName
+		      e.printStackTrace();
+		}
+		return favCount;
 	}
 	
 }

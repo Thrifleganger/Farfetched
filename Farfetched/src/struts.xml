@@ -77,8 +77,8 @@
 		        </param>
 		    </interceptor-ref>
 		    <interceptor-ref name="defaultStack"></interceptor-ref>
-		    <result name="input">/jsp/blog.jsp</result>
-			<result name="success">/jsp/blog.jsp</result>  
+		    <result name="input" type="redirectAction">blog</result>
+			<result name="success" type="redirectAction">blog</result>  
 		</action> 
 		
 		<action name="retrieveImageStream/{imageId}" class="com.akash.blog.util.RetrieveImageStream">  
