@@ -22,18 +22,20 @@ angularApp.config(function($routeProvider){
 
 angularApp.controller('displayBlogController',function($scope,$http,$filter,$sce){
 	
-	$scope.sortBy = 'default';
 	$scope.globalCounter = 0;
 	$scope.serverResponse;
 	$scope.searchKeyword = '';
+	$scope.sortBy = 'Date';
+	$scope.categoryFilter = 'All';
 	
 	$scope.getBlogDetails = function(){
 		
+		$('.cssload-plus-loader').show();
 		$http({
 			method: 'GET',
 			url:'/Farfetched/ajaxAction',
 			cache: true,
-			params: { "method" : "populateBlogEntriesOnPageLoad" }
+			params: { "method" : "populateBlogEntriesOnPageLoad", "sortBy" : $scope.sortBy, "categoryFilter" : $scope.categoryFilter }
 		}).success(function successCallback(response) {
 			
 			alert(JSON.stringify(response));
@@ -70,6 +72,18 @@ angularApp.controller('displayBlogController',function($scope,$http,$filter,$sce
 		});	
 	};
 	
+	$scope.blogFilterRefresh = function(event){
+		
+		var $this = $(event.target);
+		if($this.hasClass("sort-filter")){
+			$scope.sortBy = $this.html();
+		} else{
+			$scope.categoryFilter = $this.html();
+		}
+		
+		$scope.getBlogDetails();
+		
+	};
 	
 	$scope.likeButtonPressed = function(image){
 		

@@ -55,7 +55,7 @@ public class AjaxAction {
 		
 		if(paramMap.containsKey("method")){
 			if(paramMap.get("method").toString().equals("populateBlogEntriesOnPageLoad")){
-				consolidatedResult = populateBlogEntriesOnPageLoad();
+				consolidatedResult = populateBlogEntriesOnPageLoad(paramMap.get("sortBy").toString(),paramMap.get("categoryFilter").toString());
 				json = new Gson().toJson(consolidatedResult);
 			} else if(paramMap.get("method").toString().equals("fetchMoreBlogEntries")){
 				consolidatedResult = fetchAdditionalResults(paramMap.get("globalCounter").toString(),paramMap.get("sortBy").toString());
@@ -76,10 +76,19 @@ public class AjaxAction {
 		
 	}
 	
-	public Map<String,Map<String,String>> populateBlogEntriesOnPageLoad() throws SQLException{
+	public Map<String,Map<String,String>> populateBlogEntriesOnPageLoad(String sortBy, String categoryFilter) throws SQLException{
 		
 		System.out.println("Inside populateBlogEntriesOnPageLoad");
-		ResultSet resultSet = jdbcHelper.fetchBlogEntriesOnPageLoad();
+		String sort = EMPTY;
+		
+		//Preprocess sortBy and filter
+		if(sortBy.equalsIgnoreCase("Date")){
+			sort = "DATE_CREATED";
+		} else if(sortBy.equalsIgnoreCase("Popularity")){
+			sort = "FAV_COUNT";
+		}
+		
+		ResultSet resultSet = jdbcHelper.fetchBlogEntriesOnPageLoad(sort,categoryFilter.toLowerCase());
 		Map<String,Map<String,String>> consolidatedResult = new HashMap<String,Map<String,String>>();
 		Integer counter = 1;
 		

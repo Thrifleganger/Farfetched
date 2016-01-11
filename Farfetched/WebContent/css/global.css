@@ -1247,7 +1247,7 @@ left: -200px;
  }
  
  .blog-item-container .autoHeight{
- 	max-height: 2000px;
+ 	max-height: 9000px;
  }
  
  .blog-item-container .blog-cover-image{
@@ -1454,6 +1454,72 @@ left: -200px;
 	border: 0 none;
 	background: #eeeeee url('../images/blog/search.png') 0 0 no-repeat; 
 	background-size: 40px;
+}
+
+#filter-box{
+	background: #8c8c8c linear-gradient(to bottom, #b6c8bc, #e2e9e5) repeat scroll 0 0; 
+	margin-top: 20px; 
+	padding: 14px 0px;
+	border-radius: 10px; 
+	color: white;
+	box-shadow: 1px 2px 5px #222222;
+}
+
+#filter-box #filter-by{
+	background: linear-gradient(to bottom, #1a3300, #346600) repeat scroll 0 0;
+	width: 100%;
+	height: 100%;
+	padding:16px;
+	border-radius: 10px 0px 0px 10px;
+}
+
+#filter-box #filter-items{
+	/*padding: 15px; */
+}
+
+#filter-box #filter-items .blog-filter{
+	padding: 16px;
+	color: black;
+}
+
+#filter-box #filter-items .blog-filter:hover{
+	background: linear-gradient(to bottom, #1a3300, #346600) repeat scroll 0 0;
+	color: white;
+	width: 100%;
+	height: 100%;
+	padding: 16px;
+	cursor: pointer;
+}
+
+#filter-dropdown{
+	position: absolute; 
+	background: #8c8c8c linear-gradient(to bottom, #b6c8bc, #e2e9e5) repeat scroll 0 0;  
+	top: 70px;
+	left: 268px;
+	z-index: 2; 
+	border:1px solid grey; 
+	color:black; 
+	border-radius: 5px;
+	display: none;
+
+}
+
+#filter-dropdown #filter-list{
+	list-style-type: none;
+	padding: 0;
+}
+
+#filter-dropdown #filter-list li{
+	padding: 5px 20px;	
+	color: black;
+}
+
+#filter-dropdown #filter-list li:hover{
+	background: linear-gradient(to bottom, #1a3300, #346600) repeat scroll 0 0;
+	color: white;
+	width: 100%;
+	height: 100%;
+	cursor: pointer;
 }
 
  /*FOOTER*/

@@ -26,6 +26,18 @@ $(document).ready(function(){
 	$('.more-items-to-display').hide();
 	$('.no-items-to-display').hide();
 	
+	/* Filter Dropdown event handlers */
+	$(document).on('click mouseover','#filter-by-category, #filter-dropdown',function(){
+		$('#filter-dropdown').show();
+	});
+	$(document).on('click mouseout','#filter-by-category, #filter-dropdown',function(){
+		$('#filter-dropdown').hide();
+	});
+	$('#filter-dropdown li').click(function(){
+		$('#filter-by-category').html($(this).html());
+	});
+	
+	
 	var globalCounter = 1;
 	var blog_counter;
 	var videoLinkCounter = 1;
@@ -250,6 +262,19 @@ $(document).ready(function(){
 <div class="container">
 
 	<div class="row">
+	    <div class="col-md-10"></div>
+	    <div class="col-md-2" style="position:fixed;right:4%">
+		    <div style="height:100px; background-color: rgba(255,255,255,.4);width: 100%; border-radius: 10px">
+		    	<p>Create a new post</p>
+		    	<p>This is a public blog, where anyone can submit their entry - be it an event or an article, explore the power of a public driven blog. Why not create yours today!</p>
+		    	<p><a>Learn More</a></p>
+		    	<div class="red-btn">Create</div> 
+		    </div>
+		    <div style="height: 100px; background-color: black;width: 100%; "></div>
+	    </div>
+  	</div>
+
+	<div class="row">
 		<div class="col-md-10">
 			<div id="blog-search-box">
 				<div class="black-btn" id="blog-search-button">Search database</div>
@@ -262,8 +287,23 @@ $(document).ready(function(){
 	
 	<div class="row">
 		<div class="col-md-10">
-			<div class="filter-top">
-				Filter by: <a class="filter-by-date">Date</a> <a class="filter-by-pop">Popularity</a> <a class="createBlog">Create a blog</a>
+			<div id="filter-box">
+  				<span id="filter-by">Filter by </span>
+  				<span id="filter-items">
+  					<span class="blog-filter sort-filter" id="filter-by-date" ng-click="blogFilterRefresh($event);">Date</span>
+  					<span class="blog-filter sort-filter" id="filter-by-pop" ng-click="blogFilterRefresh($event);">Popularity</span>
+  					<span class="blog-filter category-filter" id="filter-by-category">All</span> 
+  					<span class="createBlog">Create a blog</span>
+  					<div id="filter-dropdown"> 
+						<ul id="filter-list">
+					    	<li ng-click="blogFilterRefresh($event);">All</li>
+					    	<li ng-click="blogFilterRefresh($event);">Event</li>
+					    	<li ng-click="blogFilterRefresh($event);">Article</li>
+					    	<li ng-click="blogFilterRefresh($event);">Showcase</li>
+					    	<li ng-click="blogFilterRefresh($event);">Review</li>
+					    </ul>
+					</div>
+  				</span>
 			</div>
 		</div>
 	</div>
@@ -321,7 +361,7 @@ $(document).ready(function(){
 			</div>
 		</div>
 		</div>
-		
+
 		<div style="" class="row">
 			<div class="col-md-10">
 				<div id="6" class="blog-item" data-id="blog1">
@@ -407,91 +447,7 @@ $(document).ready(function(){
 			</div>
 		</div>
 		
-		<div style="" class="row">
-			<div class="col-md-10">
-				<div id="2" class="blog-item" data-id="blog2">
-					<div class="blog-cover-image">
-						<div class="blog-cover-popup" style="">
-							<div class="like-button">
-								<img src="images/blog/unliked.png" class="hvr-grow" ng-click="likeButtonPressed($event)"/>
-							</div>
-							<div class="like-count">1</div>
-						</div>
-						<img src="retrieveImageStream/1" class="image-link image-link1">
-						<div class="blog-cover-title blog-cover-title1">Storm Festival, headlined by Storm Corrosion</div>
-					</div> 
-					<div class="collapsed-blog-content">
-						<div class="row">
-							<div class="col-md-12">
-								<h2 class="blog-heading"><a href="#1/storm-festival-headlined">Storm Festival, headlined by Storm Corrosion </a></h2>
-								<p style="float: left;">Submitted by Akash Murthy on 20th December, 2015</p> <p style="float:right">Catagory: Event</p>
- 									<br>
- 									<hr>
-								<div class="blog-description">If you are considering this, then you are making a valuable contribution to the rather broke and homeless musicians of Farfetch'd. Yes, we have physical copies of The Alchemist for sale, and no, we don't have too many copies left. If you want to get your hands on one of these eloquently elegant, matt-finished, fire breathing, 6 face digipacks...well, you can. Although not all the aforementioned adjectives hold true, its a small amount of money to pay for an independent band's merchandise. But there is a catch: Alright, since you're still here after reading through a whole lot of garbage, we assume you are genuinely interested. Here's how this is going to work. Please fill out the form below and click on Submit. You will receive an auto-generated email from our side explaining the due process and the account details, to whom you need to pay. Once we receive the funds, which will generally take one working day for NEFT transactions, we will process, package and ship it out to you, along with a formal acknowledgement of the payment reciept. Sound fair? </div>
-								
-								<div class="sub-collapsable-div event-section-collapsable-div">
-									<img class="rotate-arrow" src="images/blog/eject.png" width="45px">Event Details
-								</div>
-								
-								<div class="event-section">
-									<div class="event-details row">
-										<div class="col-md-5">
-											<table>
-												<tr>
-													<td><b>Date:</b></td>
-													<td>23rd December</td>
-												</tr>
-												<tr>
-													<td><b>Time:</b></td>
-													<td>5:00 PM</td>
-												</tr>
-												<tr>
-													<td><b>Venue:</b></td>
-													<td>Bangalore</td>
-												</tr>
-												<tr>
-													<td><b>Cover:</b></td>
-													<td>Free</td>
-												</tr>
-											</table>
-										</div>
-										<div class="red-btn" style="float: left;">RSVP</div>
-										<div>
-											<div class="black-btn" style="float: left; margin-left: 20px;">Remind me</div>
-											<div style='height: 100px; width: 300px; border-radius: 10px; position: absolute; top: 120px; left: 180px; background: white; display:none;'>
-												<input type="text">
-											</div>
-										</div>
-									</div>					                    
-								</div>	
-								
-								<div class="sub-collapsable-div media-section-collapsable-div">
-									<img class="rotate-arrow" src="images/blog/eject.png" width="45px">Media
-								</div>														
-																	
-								<div class="media-section">
-									<div class="cssload-loader">
-										<div class="cssload-inner cssload-one"></div>
-										<div class="cssload-inner cssload-two"></div>
-										<div class="cssload-inner cssload-three"></div>
-									</div>
-									
-									<div class="link-entry">
-										<a href="https://soundcloud.com/lighting-lanterns/lighting-lanterns-wake-up-free-download"></a>
-									</div>
-									<div class="link-entry">
-										<a href="https://soundcloud.com/thrifleganger/sets/southern-skies-motel"></a>
-									</div>
-								</div>
-								
-								
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-		
+	
 		<div ng-repeat="blog in serverResponse | reverse | filter: searchKeyword" ng-include="getIncludeFile()" repeat-end-directive>
 		</div>
 		
