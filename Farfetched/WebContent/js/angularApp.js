@@ -20,13 +20,17 @@ angularApp.config(function($routeProvider){
 });
 
 
-angularApp.controller('displayBlogController',function($scope,$http,$filter,$sce){
+angularApp.controller('displayBlogController',function($scope,$http,$filter,$sce,$routeParams){
 	
 	$scope.globalCounter = 0;
 	$scope.serverResponse;
 	$scope.searchKeyword = '';
 	$scope.sortBy = 'Date';
 	$scope.categoryFilter = 'All';
+	$scope.individualResponse = '';
+	
+	$scope.blogID = $routeParams.blogId;
+	$scope.urlTitle = $routeParams.urlTitle;
 	
 	$scope.getBlogDetails = function(){
 		
@@ -71,6 +75,22 @@ angularApp.controller('displayBlogController',function($scope,$http,$filter,$sce
 			}
 		});	
 	};
+	
+	$scope.getIndividualBlogEntry = function(){
+		$http({
+			method: 'GET',
+			url: '/Farfetched/ajaxAction',
+			cache: true,
+			params: { "method" : "fetchIndividualBlogEntry", "blogId" : $scope.blogID }
+		}).success(function successCallback(response){
+			
+			alert(JSON.stringify(response));
+			
+			if(typeof response != 'undefined'){
+				$scope.individualResponse = response;	
+			}
+		});	
+	}
 	
 	$scope.blogFilterRefresh = function(event){
 		
@@ -143,8 +163,6 @@ angularApp.controller('displayBlogController',function($scope,$http,$filter,$sce
 	$scope.getIncludeFile = function() {
 		return 'jsp/blogEntry.html';
 	};
-	
-	$scope.getBlogDetails();
 	
 });
 

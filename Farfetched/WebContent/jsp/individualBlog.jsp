@@ -7,6 +7,20 @@
 <title>Insert title here</title>
 </head>
 <body>
-Individual Blog!
+
+<div data-ng-init="getIndividualBlogEntry()"></div>
+Individual Blog! {{blogID}} {{urlTitle}}
+
+<div class="container" style="background-color: rgba(255,255,255,.4); box-shadow: 10px 10px 5px grey;">
+	<div class="row">
+		<div class="col-md-8">
+			<h2>Storm Festival, headlined by Storm Corrosion</h2>
+			<img src="retrieveImageStream/1000"/>
+		</div>
+		<div class="col-md-4"></div>
+	</div>
+</div>
+
+
 </body>
 </html>

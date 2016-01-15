@@ -393,6 +393,25 @@ public class JDBCHelper {
 		return resultSet; 
 	}
 	
+	public ResultSet fetchIndividualBlogEntry(int blogId){
+		ResultSet resultSet = null;
+		try{
+			pStatement = connection.prepareStatement("SELECT *, GROUP_CONCAT(T.LINK) AS CONSOLIDATED_LINKS, GROUP_CONCAT(T.TYPE) AS CONSOLIDATED_TYPES FROM (SELECT DISTINCT BLOG_BASE.BLOG_ID, BLOG_BASE.TITLE, BLOG_BASE.DESCRIPTION, BLOG_BASE.TYPE AS BLOG_TYPE, BLOG_BASE.EVENT_DATE, BLOG_BASE.TIME, BLOG_BASE.VENUE, BLOG_BASE.COVER, BLOG_BASE.IMAGE_LINK, BLOG_BASE.RSVP, BLOG_BASE.FAV_COUNT, BLOG_BASE.BUY_LINK, BLOG_BASE.STARS, BLOG_BASE.DATE_CREATED, BLOG_BASE.FACEBOOK, BLOG_BASE.SOUNDCLOUD, BLOG_BASE.YOUTUBE, BLOG_BASE.TWITTER, BLOG_BASE.AUTHOR_NAME, BLOG_BASE.AUTHOR_EMAIL, BLOG_BASE.AUTHOR_VISIBILITY, BLOG_BASE.BLOG_VISIBILITY, BLOG_BASE.STATUS, LINK_BASE.LINK, LINK_BASE.TYPE FROM BLOG_BASE,LINK_BASE WHERE BLOG_BASE.BLOG_ID = LINK_BASE.BLOG_ID AND BLOG_BASE.BLOG_ID = ?) AS T GROUP BY T.BLOG_ID");
+			pStatement.setInt(1, blogId);
+			
+			resultSet = pStatement.executeQuery();
+
+		}catch(SQLException se){
+		      //Handle errors for JDBC
+		      se.printStackTrace();
+		}catch(Exception e){
+		      //Handle errors for Class.forName
+		      e.printStackTrace();
+		}
+		
+		return resultSet;
+	}
+	
 	public int getMaxImageIdFromImageBase(){
 		
 		int maxNumber = 0;

@@ -241,7 +241,7 @@ $(document).ready(function(){
 	});
 	
 	$('#blog-type').on('change',function(){
-		var type = $('#blog-type').val();
+		var type = $('#blog-type').val();<img src="retrieveImageStream/1000"/>
 		$('#blogEntry-form').find('tr').not('.eternal,.'+type).fadeOut();  
 		$('#blogEntry-form').find('tr.eternal,tr.'+type).fadeIn();
 		/*$('#blogEntry-form').find('tr,tbody').not(".eternal,."+type).fadeOut(); */
@@ -257,18 +257,18 @@ $(document).ready(function(){
 <a id="populate">Populate</a>
 
 <br>
-<div class="populateContent"></div>
+<div class="populateContent" data-ng-init="getBlogDetails()"></div>
 
 <div class="container">
 
 	<div class="row">
 	    <div class="col-md-10"></div>
-	    <div class="col-md-2" style="position:fixed;right:4%">
-		    <div style="height:100px; background-color: rgba(255,255,255,.4);width: 100%; border-radius: 10px">
-		    	<p>Create a new post</p>
-		    	<p>This is a public blog, where anyone can submit their entry - be it an event or an article, explore the power of a public driven blog. Why not create yours today!</p>
+	    <div class="col-md-2 right-fixed-banner">
+		    <div id="create-blog-banner">
+		    	<p class="create-blog-banner-header">Write a new post</p>
+		    	<p class="create-blog-banner-content">This is a public blog, where anyone can submit their entry - be it an event or an article, explore the power of a public driven blog. Why not create yours today!</p>
 		    	<p><a>Learn More</a></p>
-		    	<div class="red-btn">Create</div> 
+		    	<div class="green-btn createBlog">Create</div> 
 		    </div>
 		    <div style="height: 100px; background-color: black;width: 100%; "></div>
 	    </div>
@@ -293,7 +293,6 @@ $(document).ready(function(){
   					<span class="blog-filter sort-filter" id="filter-by-date" ng-click="blogFilterRefresh($event);">Date</span>
   					<span class="blog-filter sort-filter" id="filter-by-pop" ng-click="blogFilterRefresh($event);">Popularity</span>
   					<span class="blog-filter category-filter" id="filter-by-category">All</span> 
-  					<span class="createBlog">Create a blog</span>
   					<div id="filter-dropdown"> 
 						<ul id="filter-list">
 					    	<li ng-click="blogFilterRefresh($event);">All</li>

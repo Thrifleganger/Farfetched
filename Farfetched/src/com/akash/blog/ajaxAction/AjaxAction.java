@@ -36,6 +36,7 @@ public class AjaxAction {
 		HttpServletRequest request = ServletActionContext.getRequest();
 		HttpServletResponse response = ServletActionContext.getResponse();
 		Map<String,Map<String,String>> consolidatedResult = new HashMap<String,Map<String,String>>();
+		Map<String,String> individualResult = new HashMap<String,String>();
 		
 		String json = null;
 		String queryString = request.getQueryString();
@@ -63,7 +64,10 @@ public class AjaxAction {
 			} else if(paramMap.get("method").toString().equals("updateFavCount")){
 				int favCount = updateFavCount(Integer.parseInt(paramMap.get("blogId")),paramMap.get("operation").toString());
 				json = new Gson().toJson(favCount);
-			}
+			} else if(paramMap.get("method").toString().equals("fetchIndividualBlogEntry")){
+				individualResult = fetchIndividualBlogEntry(Integer.parseInt(paramMap.get("blogId")));
+				json = new Gson().toJson(individualResult);
+			}				
 		}
 		
 		System.out.println("ConsolidatedResult: "+json);
@@ -178,6 +182,60 @@ public class AjaxAction {
 		System.out.println("Inside updateFavCount");
 		
 		return jdbcHelper.updateFavCount(blog_id, operation);
+	}
+	
+	public Map<String,String> fetchIndividualBlogEntry(int blog_id) throws NumberFormatException, SQLException{
+		
+		System.out.println("Inside fetchIndividualBlogEntry, blogID: "+blog_id);
+		
+		BlogEntryBean blog = new BlogEntryBean();
+		Map<String,String> individualResult = new HashMap<String,String>();
+		ResultSet resultSet = null;
+		
+		resultSet = jdbcHelper.fetchIndividualBlogEntry(blog_id);
+		
+		while(resultSet.next()){
+			
+			blog.setTitle(resultSet.getString("title"));
+			blog.setDescription(resultSet.getString("description"));
+			blog.setType(resultSet.getString("blog_type"));
+			blog.setEventDate(resultSet.getDate("event_date"));
+			blog.setTime(resultSet.getString("time"));
+			blog.setVenue(resultSet.getString("venue"));
+			blog.setCover(resultSet.getString("cover"));
+			blog.setImageId(Integer.parseInt(resultSet.getString("image_link")));
+			blog.setRsvp(resultSet.getString("rsvp"));
+			blog.setFavCount(Integer.parseInt(resultSet.getString("fav_count")));
+			blog.setBuyLink(resultSet.getString("buy_link"));
+			blog.setReviewStars(Integer.parseInt(resultSet.getString("stars")));
+			blog.setCurrentDate(resultSet.getTimestamp("date_created"));
+			blog.setFacebook(resultSet.getString("facebook"));
+			blog.setSoundcloud(resultSet.getString("soundcloud"));
+			blog.setYoutube(resultSet.getString("youtube"));
+			blog.setTwitter(resultSet.getString("twitter"));
+			blog.setAuthor_name(resultSet.getString("author_name"));
+			blog.setAuthor_email(resultSet.getString("author_email"));
+			blog.setDisplay_checkbox(resultSet.getString("author_visibility"));
+			blog.setVisibility(resultSet.getString("blog_visibility"));
+			blog.setStatus(resultSet.getString("status"));
+			if(resultSet.getString("consolidated_links").contains(",")){
+				blog.setConsolidatedLinks(Arrays.asList(resultSet.getString("consolidated_links").split(",")));
+				blog.setConsolidatedTypes(Arrays.asList(resultSet.getString("consolidated_types").split(",")));
+			} else{
+				blog.setConsolidatedLinks(Arrays.asList(resultSet.getString("consolidated_links")));
+				blog.setConsolidatedLinks(Arrays.asList(resultSet.getString("consolidated_links")));
+			}
+			blog.setNumberOfLinks(blog.getConsolidatedLinks().size());
+			
+			individualResult.put("title", blog.getTitle());
+			individualResult.put("description", blog.getDescription());
+			individualResult.put("type", blog.getType());
+			individualResult.put("description", blog.getDescription());
+			individualResult.put("image", blog.getImageId().toString());
+			individualResult.put("favCount", blog.getFavCount().toString());
+		
+		}
+		return individualResult;
 	}
 
 }
