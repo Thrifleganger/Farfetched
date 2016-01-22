@@ -17,10 +17,74 @@ angularApp.config(function($routeProvider){
 		}).otherwise({
 			redirectTo: '/'
 		});
+	
+});
+
+angularApp.run(function($rootScope,$timeout){
+	console.log("Inside run");
+	/*$rootScope.$on("$routeChangeStart", function (event, next, current) {
+		console.log("Route changed");
+		$timeout(function(){
+			$rootScope.$broadcast('restorestate'); //let everything know we need to restore state
+	        //sessionStorage.restorestate = false;
+		}, 1000);
+	   /* if (sessionStorage.restorestate == "true") {*/
+	        
+	    //}
+	//}); 
+	//let everthing know that we need to save state now.
+	window.onbeforeunload = function (event) {
+		console.log("OnbeforeUnLoad");
+		$rootScope.$broadcast('savestate');
+	};
 });
 
 
-angularApp.controller('displayBlogController',function($scope,$http,$filter,$sce,$routeParams){
+
+angularApp.factory('persistState', ['$rootScope', function ($rootScope) {
+	console.log("Inside factory");
+    var service = {
+    		
+        model: {
+            serverState: ''
+        },
+
+        SaveState: function () {       
+        	sessionStorage.persistState = angular.toJson(service.model);
+        	console.log("Saving state");        	
+        },
+
+        RestoreState: function () {        	
+        	if(typeof sessionStorage.persistState !== 'undefined'){
+	            service.model = angular.fromJson(sessionStorage.persistState);
+	            if(typeof service.model.serverState !== 'undefined'){
+		            if(service.model.serverState == ''){
+		            	return "fetch";
+		            } else{
+		            	return "retain";
+		            }
+	            } else{
+	            	return "fetch";
+	            }
+        	} else{
+        		return "fetch";
+        	}
+        }
+    };
+    
+    service.setServerResponseToSession = function(serverResponse){
+    	service.model.serverState = serverResponse;
+    	console.log("RetrieveServerstate");
+    };
+
+    $rootScope.$on("savestate", service.SaveState);
+    $rootScope.$on("restorestate", service.RestoreState);
+
+    return service;
+}]);
+
+
+angularApp.controller('displayBlogController',function($scope,$http,$filter,$sce,$routeParams,persistState){
 	
 	$scope.globalCounter = 0;
 	$scope.serverResponse;
@@ -31,6 +95,15 @@ angularApp.controller('displayBlogController',function($scope,$http,$filter,$sce
 	
 	$scope.blogID = $routeParams.blogId;
 	$scope.urlTitle = $routeParams.urlTitle;
+	
+	$scope.retrieveSavedState = function(){
+		if(persistState.RestoreState() == "fetch"){
+			$scope.getBlogDetails();
+		} else{
+			$scope.serverResponse = persistState.model.serverState;
+			console.log("");
+		}
+	}
 	
 	$scope.getBlogDetails = function(){
 		
@@ -48,6 +121,8 @@ angularApp.controller('displayBlogController',function($scope,$http,$filter,$sce
 			$scope.serverResponse = response;		
 			$scope.trustAsHtml = $sce.trustAsHtml;
 			$scope.counter = 0;
+			
+			persistState.setServerResponseToSession($scope.serverResponse);
 			
 			$('.cssload-plus-loader').fadeOut();
 			

@@ -241,7 +241,7 @@ $(document).ready(function(){
 	});
 	
 	$('#blog-type').on('change',function(){
-		var type = $('#blog-type').val();<img src="retrieveImageStream/1000"/>
+		var type = $('#blog-type').val();
 		$('#blogEntry-form').find('tr').not('.eternal,.'+type).fadeOut();  
 		$('#blogEntry-form').find('tr.eternal,tr.'+type).fadeIn();
 		/*$('#blogEntry-form').find('tr,tbody').not(".eternal,."+type).fadeOut(); */
@@ -257,7 +257,7 @@ $(document).ready(function(){
 <a id="populate">Populate</a>
 
 <br>
-<div class="populateContent" data-ng-init="getBlogDetails()"></div>
+<div class="populateContent" data-ng-init="retrieveSavedState()"></div>
 
 <div class="container">
 
@@ -309,7 +309,7 @@ $(document).ready(function(){
 	
 	<div class="blog-item-container">		
 	
-		<div class="cssload-plus-loader">
+		<div class="cssload-plus-loader" >
 		<div class="cssload-top">
 			<div class="cssload-square">
 				<div class="cssload-square">
@@ -371,7 +371,7 @@ $(document).ready(function(){
 							</div>
 							<div class="like-count">{{serverResponse.blog1.favCount}}</div>
 						</div>
-						<img src="retrieveImageStream/1" class="image-link image-link1">
+						<img ng-src="retrieveImageStream/1" class="image-link image-link1">
 						<div class="blog-cover-title blog-cover-title1">Storm Festival, headlined by Storm Corrosion</div>
 					</div> 
 					<div class="collapsed-blog-content">
