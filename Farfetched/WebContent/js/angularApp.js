@@ -14,34 +14,34 @@ angularApp.config(function($routeProvider){
 			templateUrl: 'jsp/blogHome.jsp',
 			controller: 'displayBlogController'
 				
+		}).
+		when('/search/:searchString',{
+			
+			templateUrl: 'jsp/blogHome.jsp',
+			controller: 'displayBlogController'
+				
 		}).otherwise({
 			redirectTo: '/'
 		});
 	
 });
 
-angularApp.run(function($rootScope,$timeout){
+angularApp.run(function($rootScope,persistState,$location){
 	console.log("Inside run");
 	/*$rootScope.$on("$routeChangeStart", function (event, next, current) {
-		console.log("Route changed");
-		$timeout(function(){
-			$rootScope.$broadcast('restorestate'); //let everything know we need to restore state
-	        //sessionStorage.restorestate = false;
-		}, 1000);
-	   /* if (sessionStorage.restorestate == "true") {*/
-	        
-	    //}
-	//}); 
-	//let everthing know that we need to save state now.
+		persistState.model.previousURL = $location.$$url;	        
+		console.log("Route changed");	    
+	}); */
+	
 	window.onbeforeunload = function (event) {
 		console.log("OnbeforeUnLoad");
-		$rootScope.$broadcast('savestate');
+		$rootScope.$broadcast('deleteState');
 	};
 });
 
 
 
-angularApp.factory('persistState', ['$rootScope', function ($rootScope) {
+angularApp.factory('persistState', ['$rootScope','$location', function ($rootScope,$location) {
 	console.log("Inside factory");
     var service = {
     		
@@ -49,9 +49,15 @@ angularApp.factory('persistState', ['$rootScope', function ($rootScope) {
             serverState: ''
         },
 
-        SaveState: function () {       
+        SaveState: function () {           	
         	sessionStorage.persistState = angular.toJson(service.model);
         	console.log("Saving state");        	
+        },
+        
+        DeleteState: function () {           	
+        	service.model.serverState = '';  
+        	sessionStorage.persistState = angular.toJson(service.model);
+        	console.log("Deleted state");
         },
 
         RestoreState: function () {        	
@@ -74,11 +80,13 @@ angularApp.factory('persistState', ['$rootScope', function ($rootScope) {
     
     service.setServerResponseToSession = function(serverResponse){
     	service.model.serverState = serverResponse;
-    	console.log("RetrieveServerstate");
+    	$rootScope.$broadcast('savestate');
+    	console.log("RetrieveServerstate and save session");
     };
 
+    $rootScope.$on("deleteState", service.DeleteState);
     $rootScope.$on("savestate", service.SaveState);
-    $rootScope.$on("restorestate", service.RestoreState);
+    //$rootScope.$on("restorestate", service.RestoreState);
 
     return service;
 }]);
